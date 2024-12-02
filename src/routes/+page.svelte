@@ -44,8 +44,13 @@
 	</a>
 {/snippet}
 
-<div class="min-h-[92vh] px-8 py-4 grid grid-cols-4 gap-4 items-start bg-slate-100">
-	{#each products as product}
-		{@render card(product)}
-	{/each}
+<div class="min-h-[92vh] px-8 py-4 bg-slate-100">
+	<div class="grid grid-cols-4 gap-4 items-start">
+		{#each products as product}
+			{@render card(product)}
+		{/each}
+	</div>
+	<a href="/ambos" class="font-bold text-[18px] flex justify-center mt-6">
+		Ver más.
+	</a>
 </div>
