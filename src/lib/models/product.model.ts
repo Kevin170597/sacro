@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import { type Product, type Variant } from "$lib/interfaces";
+import type { Product, Variant } from "$lib/interfaces";
 
 const VariantSchema = new Schema<Variant>({
     name: {
