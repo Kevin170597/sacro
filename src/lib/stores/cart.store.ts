@@ -46,6 +46,18 @@ const createCartStore = () => {
                 return updatedItems;
             });
         },
+        subsctractFromCart: (id: string) => {
+            update((items) => {
+                const existingItem = items.find((item) => item.id === id);
+                if (!existingItem) return items;
+
+                const updatedItems = items.map((item) =>
+                    item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+                );
+                saveCart(updatedItems);
+                return updatedItems;
+            })
+        },
         updateQuantity: (id: string, quantity: number) => {
             update((items) => {
                 const updatedItems = items.map((item) =>

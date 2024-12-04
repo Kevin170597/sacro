@@ -5,24 +5,24 @@
 	let { data }: { data: PageData } = $props();
 	let products = [
 		{
-			id: "1",
+			_id: "1",
 			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			price: 60900,
+			unit_price: 60900,
 		},
 		{
-			id: "2",
+			_id: "2",
 			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			price: 61900,
+			unit_price: 61900,
 		},
 		{
-			id: "3",
+			_id: "3",
 			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			price: 62900,
+			unit_price: 62900,
 		},
 		{
-			id: "4",
+			_id: "4",
 			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			price: 63900,
+			unit_price: 63900,
 		},
 	];
 </script>
@@ -33,14 +33,14 @@
 </svelte:head>
 
 {#snippet card(p: any)}
-	<a href="/ambos/{p.id}">
+	<a href="/ambos/{p._id}">
 		<div
 			class="bg-white flex flex-col items-center gap-4 border border-slate-300 rounded-lg p-4"
 		>
 			<img class="w-[80%]" src={Cover} alt="" />
 			<h2>{p.title}</h2>
 			<div class="w-full">
-				<b class="text-[20px]">${p.price}</b>
+				<b class="text-[20px]">${p.unit_price}</b>
 			</div>
 		</div>
 	</a>

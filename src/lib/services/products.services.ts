@@ -37,3 +37,13 @@ export const getManyProductsById = async (ids: string[]): Promise<Product[]> => 
         return [];
     }
 };
+
+export const addProduct = async (product: Product): Promise<Product | []> => {
+    try {
+        await dbConnect();
+        return await ProductModel.create(product);
+    } catch (error) {
+        console.error("Error creating product.", error);
+        return [];
+    }
+};
