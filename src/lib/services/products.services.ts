@@ -6,10 +6,7 @@ import mongoose from "mongoose";
 export const getProducts = async (): Promise<Product[]> => {
     try {
         await dbConnect();
-        const res: Product[] | [] = await ProductModel.find({});
-        console.log(res);
-        return res;
-        //return await ProductModel.find({});
+        return await ProductModel.find({});
     } catch (error) {
         console.error("Error fetching products:", error);
         return [];
@@ -24,12 +21,19 @@ export const getProductById = async (id: string): Promise<Product | null> => {
         }
 
         await dbConnect();
-        const res: Product | null = await ProductModel.findOne({ _id: id });
-        console.log(res);
-        return res;
-        //return await ProductModel.findOne({ _id: id });
+        return await ProductModel.findOne({ _id: id });
     } catch (error) {
         console.error(`Error fetching product with id ${id}:`, error);
         return null;
+    }
+};
+
+export const getManyProductsById = async (ids: string[]): Promise<Product[]> => {
+    try {
+        await dbConnect();
+        return await ProductModel.find({ "_id": { $in: ids } });
+    } catch (error) {
+        console.error(`Error fetching products with ids ${ids}:`, error);
+        return [];
     }
 };
