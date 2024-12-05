@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Product } from "$lib/interfaces";
+    import type { Product, Size, Variant } from "$lib/interfaces";
     import { cart } from "$lib/stores";
     import type { CartItem } from "$lib/stores";
 
@@ -15,11 +15,41 @@
             method: "POST",
             body: JSON.stringify(ids),
         });
-        let items = await res.json();
-        cartProducts = items.map((product: Product) => {
-            let item = $cart.find((item: CartItem) => item.id === product._id);
-            return { ...product, quantity: item?.quantity };
-        });
+        let fetchedProducts: CartProduct[] = await res.json();
+
+        // Map cart items to the fetched products, preserving duplicates
+        cartProducts = $cart.map((cartItem: CartItem) => {
+            let product = fetchedProducts.find((p) => p._id === cartItem.id); // Match product ID
+            if (product) {
+                // Clone the product to avoid mutating the original
+                let customizedProduct = { ...product };
+
+                // Select the specific variant
+                let selectedColor = customizedProduct.variants.find(
+                    (variant: Variant) => variant.id === cartItem.colorId,
+                );
+                if (selectedColor) {
+                    customizedProduct.variants = [selectedColor];
+
+                    // Select the specific size
+                    let selectedSize = selectedColor?.size.find(
+                        (size: Size) => size.id === cartItem.sizeId,
+                    );
+                    if (selectedSize)
+                        return {
+                            ...customizedProduct,
+                            variants: [
+                                {
+                                    ...selectedColor,
+                                    size: [selectedSize], // Include only the selected size
+                                },
+                            ],
+                            quantity: cartItem.quantity, // Assign quantity from cart
+                        };
+                }
+            }
+            return null; // Handle missing product gracefully
+        }).filter((item): item is CartProduct => item !== null); // Remove null values
     };
 
     $effect(() => {
@@ -46,11 +76,17 @@
                         <div class="w-[50%] flex flex-col gap-2">
                             <b class="m-0">{p.title}</b>
                             <p class="mt-0 text-slate-500 text-[14px]">
-                                Color: Celeste, Talle M
+                                Color: {p.variants[0].name}, Talle: {p
+                                    .variants[0].size[0].name}
                             </p>
                             <button
                                 class="w-fit"
-                                onclick={() => removeFromCart(p._id)}
+                                onclick={() =>
+                                    removeFromCart(
+                                        p._id,
+                                        p.variants[0].id,
+                                        p.variants[0].size[0].id,
+                                    )}
                             >
                                 <b class="text-blue-800">Eliminar</b>
                             </button>
@@ -61,14 +97,19 @@
                             >
                                 <button
                                     class="px-4 text-blue-600 text-[24px]"
-                                    onclick={() => subsctractFromCart(p._id)}
+                                    onclick={() => subsctractFromCart(p._id, p.variants[0].id, p.variants[0].size[0].id)}
                                 >
                                     -
                                 </button>
                                 <p class="px-4">{p.quantity}</p>
                                 <button
                                     class="px-4 text-blue-600 text-[24px]"
-                                    onclick={() => addToCart(p._id)}
+                                    onclick={() =>
+                                        addToCart(
+                                            p._id,
+                                            p.variants[0].id,
+                                            p.variants[0].size[0].id,
+                                        )}
                                 >
                                     +
                                 </button>
@@ -125,6 +166,9 @@
                             .toLocaleString("es-ar")}
                     </b>
                 </div>
+                <button class="border-2 border-slate-800 p-2 w-full rounded-lg"
+                    >Continuar compra</button
+                >
             </div>
         {:else}
             <div

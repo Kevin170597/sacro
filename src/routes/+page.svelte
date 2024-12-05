@@ -3,28 +3,6 @@
 	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
-	let products = [
-		{
-			_id: "1",
-			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			unit_price: 60900,
-		},
-		{
-			_id: "2",
-			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			unit_price: 61900,
-		},
-		{
-			_id: "3",
-			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			unit_price: 62900,
-		},
-		{
-			_id: "4",
-			title: "Ambo Arciel Cuello V | Combinado | Sacro",
-			unit_price: 63900,
-		},
-	];
 </script>
 
 <svelte:head>
@@ -48,16 +26,11 @@
 
 <div class="min-h-[92vh] px-8 py-4 bg-slate-100">
 	<div class="grid grid-cols-4 gap-4 items-start">
-		{#each products as product}
+		{#each data.data as product}
 			{@render card(product)}
 		{/each}
 	</div>
 	<a href="/ambos" class="font-bold text-[18px] flex justify-center mt-6">
 		Ver más.
 	</a>
-	<div class="grid grid-cols-4 gap-4 items-start">
-		{#each data.data as product}
-			{@render card(product)}
-		{/each}
-	</div>
 </div>

@@ -8,7 +8,14 @@ export interface Product {
 };
 
 export interface Variant {
+    id: string,
     name: string,
     hexColor: string,
-    images: string[]
+    images: string[],
+    size: Size[]
 };
+
+export interface Size {
+    id: string,
+    name: string
+}

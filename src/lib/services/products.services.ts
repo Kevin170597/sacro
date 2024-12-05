@@ -38,7 +38,7 @@ export const getManyProductsById = async (ids: string[]): Promise<Product[]> => 
     }
 };
 
-export const addProduct = async (product: Product): Promise<Product | []> => {
+export const addProduct = async (product: Product): Promise<Product | [] | any> => {
     try {
         await dbConnect();
         return await ProductModel.create(product);

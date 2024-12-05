@@ -14,7 +14,7 @@ export const dbConnect = async () => {
     }
     await connect(MONGO_URL ?? '', { dbName: DB_NAME });
     mongoConnection.isConnected = 1;
-    console.log("Cpmmected tp MongoDB");
+    //console.log("Connected to MongoDB");
 };
 
 export const dbDisconnect = async () => {
