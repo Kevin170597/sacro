@@ -74,7 +74,7 @@
                             alt=""
                         />
                         <div class="w-[50%] flex flex-col gap-2">
-                            <b class="m-0">{p.title}</b>
+                            <a href="/category/{p._id}" class="m-0 font-bold">{p.title}</a>
                             <p class="mt-0 text-slate-500 text-[14px]">
                                 Color: {p.variants[0].name}, Talle: {p
                                     .variants[0].size[0].name}
