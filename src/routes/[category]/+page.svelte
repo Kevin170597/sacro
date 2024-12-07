@@ -13,7 +13,7 @@
 			<div class="w-full flex justify-center">
 				<img class="w-[80%]" src={p.variants[0].images[0]} alt="" />
 			</div>
-			<p class="text-[12px] text-slate-500 border border-slate-300 w-fit px-2 rounded-lg">9 colores</p>
+			<p class="text-[12px] text-slate-500 border border-slate-300 w-fit px-2 rounded-lg">{p.variants.length} colores</p>
 			<div class="flex gap-2 flex-wrap">
 				{#each p.variants as v}
 					<img class="w-[16%]" src={v.images[0]} alt="">

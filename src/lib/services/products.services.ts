@@ -1,7 +1,7 @@
 import type { Product } from "$lib/interfaces";
 import { ProductModel } from "$lib/models";
 import { dbConnect } from "$lib/db";
-import mongoose from "mongoose";
+import mongoose, { type UpdateWriteOpResult } from "mongoose";
 
 export const getProducts = async (): Promise<Product[]> => {
     try {
@@ -44,6 +44,16 @@ export const addProduct = async (product: Product): Promise<Product | [] | any> 
         return await ProductModel.create(product);
     } catch (error) {
         console.error("Error creating product.", error);
+        return [];
+    }
+};
+
+export const updateProduct = async (id: string, product: Partial<Product>): Promise<UpdateWriteOpResult | []> => {
+    try {
+        await dbConnect();
+        return await ProductModel.updateOne({ _id: id }, product);
+    } catch (error) {
+        console.error("Error updating product.", error);
         return [];
     }
 };

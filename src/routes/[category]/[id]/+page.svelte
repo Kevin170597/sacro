@@ -30,7 +30,7 @@
             <div
                 class="w-[65%] bg-white p-3 border border-slate-300 rounded-lg"
             >
-                <div class="flex border-b border-slate-300">
+                <div class="flex border-b border-slate-300 pb-8">
                     <div class="w-[8%] flex flex-col gap-2 p-2">
                         {#each data.data.variants[selectedColor].images as img, i}
                             <button
@@ -49,7 +49,7 @@
                             src={data.data.variants[selectedColor].images[
                                 selectedImage
                             ]}
-                            class="w-[80%] h-fit"
+                            class="w-[60%] h-fit"
                             alt=""
                         />
                     </div>
@@ -91,22 +91,8 @@
                 </div>
                 <div class="p-4">
                     <h2 class="text-[20px] mb-4">Descripción</h2>
-                    <p class="whitespace-pre-line">¡Somos Sacro!
-
-                        Somos fabricantes. Todas las prendas son confeccionadas con Arciel y 100% dedicación.
-                        
-                        Nuestros ambos te brindan comodidad a la hora de realizar tus actividades cotidianas y además son súper cancheros ;)
-                        
-                        ACLARACIÓN:
-                        - La cinta tensora de la cintura es opcional.
-                        - Podés elegir el color de los vivos y también el de la cinta tensora. Aclararlo vía mensajería de MercadoLibre posterior a la compra.
-                        
-                        ¡IMPORTANTE! Por favor te pedimos revisar la tabla de talles antes de ofertar.
-                        
-                        ¿Necesitas un talle más grande? ¡Indicanos las medidas y te armamos un presupuesto!
-                        
-                        ¡Agradecemos tu confianza!
-                        
+                    <p class="whitespace-pre-line">
+                        {data.data.description}
                         </p>
                 </div>
             </div>
@@ -129,8 +115,8 @@
                     <div class="flex gap-2 flex-wrap">
                         {#each data.data.variants as variant, i}
                             <button
-                                onclick={() => (selectedColor = i)}
-                                class="w-10 h-10 rounded-full {selectedColor ===
+                                onclick={() => {selectedColor = i; selectedImage = 0; selectedSize = 0}}
+                                class="w-10 h-10 rounded-full border-2 border-slate-300 {selectedColor ===
                                 i
                                     ? 'border-4 border-slate-500'
                                     : ''}"
