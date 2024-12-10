@@ -1,17 +1,19 @@
+import mongoose, { type UpdateWriteOpResult } from "mongoose";
 import type { Product } from "$lib/interfaces";
 import { ProductModel } from "$lib/models";
 import { dbConnect } from "$lib/db";
-import mongoose, { type UpdateWriteOpResult } from "mongoose";
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async (sortByUnitPrice?: 'asc' | 'desc'): Promise<Product[] | any> => {
     try {
         await dbConnect();
-        return await ProductModel.find({});
+
+        const sortOrder = sortByUnitPrice === 'asc' ? 1 : -1;
+        return await ProductModel.find({})
+            .sort(sortByUnitPrice ? { unit_price: sortOrder } : {});
     } catch (error) {
         console.error("Error fetching products:", error);
         return [];
     }
-
 };
 
 export const getProductById = async (id: string): Promise<Product | null> => {
@@ -34,6 +36,16 @@ export const getManyProductsById = async (ids: string[]): Promise<Product[]> => 
         return await ProductModel.find({ "_id": { $in: ids } });
     } catch (error) {
         console.error(`Error fetching products with ids ${ids}:`, error);
+        return [];
+    }
+};
+
+export const getRandomProducts = async (): Promise<Product[]> => {
+    try {
+        await dbConnect();
+        return await ProductModel.aggregate([{ $sample: { size: 2 } }]);
+    } catch (error) {
+        console.error("Error fetching products:", error);
         return [];
     }
 };
