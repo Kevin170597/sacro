@@ -62,6 +62,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Carrito de compras</title>
+</svelte:head>
+
 <div class="min-h-[92vh] px-8 py-4 bg-slate-100">
     <h1 class="font-bold text-[20px] mb-4">Tu carrito</h1>
     <div class="flex items-start gap-4">

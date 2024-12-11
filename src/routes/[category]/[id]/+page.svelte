@@ -26,6 +26,10 @@
     };
 </script>
 
+<svelte:head>
+    <title>{data.product?.title}</title>
+</svelte:head>
+
 <div class="min-h-[92vh] px-8 py-4 bg-slate-100 flex flex-start gap-12">
     {#if data.product}
         <div class="flex gap-4 items-start">
