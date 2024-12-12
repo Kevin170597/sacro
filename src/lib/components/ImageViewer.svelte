@@ -12,21 +12,18 @@
         maxScale?: number;
         scaleSmoothing?: number;
         tweenOptions?: { duration: number, easing: any};
-        /**
-         * @deprecated use `tweenOptions` instead
-         */
     }
 
     let {
         src,
         targetOffsetX = 0,
         targetOffsetY = 0,
-        targetScale = 1.0,
+        targetScale = 0.7,
         minScale = 0.5,
         maxScale = 3.0,
         scaleSmoothing = 500,
         tweenOptions = {
-            duration: 300,
+            duration: 100,
             easing: cubicOut,
         }
     }: Props = $props();
