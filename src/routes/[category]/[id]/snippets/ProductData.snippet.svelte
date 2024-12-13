@@ -21,9 +21,9 @@
             selectedImage = 0;
             selectedSize = 0;
         }}
-        class="w-10 h-10 rounded-full border-2 border-slate-300 {selectedColor ===
+        class="w-10 h-10 rounded-full border-2 border-slate-300 hover:shadow-[0px_0px_10px_#999999] transition-all duration-200 {selectedColor ===
         i
-            ? 'border-4 border-slate-500'
+            ? 'border-2 border-slate-500 shadow-[0px_0px_10px_#999999]'
             : ''}"
         style="background-color: {variant.hexColor};"
         aria-label="color"
@@ -35,7 +35,7 @@
         onclick={() => (selectedSize = i)}
         class="border border-slate-300 w-10 h-8 rounded-lg text-[14px] {selectedSize ===
         i
-            ? 'border-4 border-slate-500'
+            ? 'border-2 border-slate-500 bg-slate-200'
             : ''}"
     >
         {size.name}

@@ -18,7 +18,11 @@
         </p>
         <div class="flex gap-2 flex-wrap">
             {#each product.variants as variant}
-                <img class="w-[16%]" src={variant.images[0]} alt="" />
+                <button
+                    aria-label="color"
+                    class="w-8 h-8 rounded-full border-2 border-gray-300"
+                    style="background-color: {variant.hexColor};"
+                ></button>
             {/each}
         </div>
         <p class="text-[14px]">{product.title}</p>
@@ -26,6 +30,11 @@
             <b class="text-[22px]"
                 >${product.unit_price.toLocaleString("es-ar")}</b
             >
+            <p
+                class="bg-gray-500 mt-2 text-white w-fit px-3 rounded-full text-[14px]"
+            >
+                Envío gratis
+            </p>
         </div>
     </div>
 </a>

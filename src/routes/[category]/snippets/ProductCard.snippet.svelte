@@ -18,7 +18,11 @@
         </p>
         <div class="flex gap-2 flex-wrap">
             {#each product.variants as variant}
-                <img class="w-[16%]" src={variant.images[0]} alt="" />
+                <button
+                    aria-label="color"
+                    class="w-8 h-8 rounded-full border-2 border-gray-300"
+                    style="background-color: {variant.hexColor};"
+                ></button>
             {/each}
         </div>
         <p class="text-[14px]">{product.title}</p>

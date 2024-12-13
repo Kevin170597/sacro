@@ -68,7 +68,7 @@
                 </div>
                 <button
                     onclick={() => handleAddToCart()}
-                    class="border-2 border-slate-800 p-2 w-full rounded-lg"
+                    class="border-2 border-slate-800 p-2 w-full rounded-lg hover:bg-slate-800 transition-colors duration-300 hover:text-white"
                 >
                     <b>Agregar al carrito</b>
                 </button>

@@ -77,7 +77,7 @@
                     <CartProductCard {product} />
                 {/each}
             </div>
-        {:else if !cartProducts.length && loadingProducts}
+        {:else if !cartProducts.length && $cart.length}
             <div
                 class="bg-white border border-slate-300 rounded-lg px-8 w-4/6 min-h-[50vh] flex justify-center items-center"
             >
@@ -87,7 +87,7 @@
             <div
                 class="bg-white border border-slate-300 rounded-lg p-4 w-4/6 min-h-[50vh] flex justify-center items-center"
             >
-                <p>Agregá productos para armar tu carrito</p>
+                <p>Agregá productos para armar tu carrito.</p>
             </div>
         {/if}
         <PurchaseSummary {cartProducts} />
