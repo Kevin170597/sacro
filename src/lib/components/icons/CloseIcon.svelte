@@ -3,12 +3,12 @@
 </script>
 
 <svg
-    enable-background="new 0 0 24 24"
+    enable-background="new 0 0 22 22"
     height="24px"
     id="Layer_1"
     version="1.1"
     viewBox="0 0 256 256"
-    width="24px"
+    width="22px"
     xml:space="preserve"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
