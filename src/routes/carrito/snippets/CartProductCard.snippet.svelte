@@ -2,13 +2,26 @@
     import type { Product } from "$lib/interfaces";
     import { cart } from "$lib/stores";
 
-    const { removeFromCart, addToCart, subsctractFromCart } = cart;
-
     interface CartProduct extends Product {
         quantity: number;
     }
 
     let { product }: { product: CartProduct } = $props();
+
+    const {
+        addToCart,
+        subtractFromCart,
+        removeFromCart,
+    }: {
+        addToCart: (
+            id: string,
+            colorId: string,
+            sizeId: string,
+            quantity?: number,
+        ) => void;
+        subtractFromCart: (id: string, colorId: string, sizeId: string) => void;
+        removeFromCart: (id: string, colorId: string, sizeId: string) => void;
+    } = cart;
 </script>
 
 <div class="flex gap-4 items-center py-6 border-b border-slate-300">
@@ -38,7 +51,7 @@
             <button
                 class="px-4 text-blue-600 text-[24px]"
                 onclick={() =>
-                    subsctractFromCart(
+                    subtractFromCart(
                         product._id!,
                         product.variants[0].id,
                         product.variants[0].size[0].id,

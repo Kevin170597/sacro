@@ -13,8 +13,8 @@
 
     const getManyProductsById = async (): Promise<CartProduct[]> => {
         loadingProducts = true;
-        let ids = $cart.map((item: CartItem) => item.id);
-        let res = await fetch("/api/products/many", {
+        let ids: string[] = $cart.map((item: CartItem) => item.id);
+        let res: Response = await fetch("/api/products/many", {
             method: "POST",
             body: JSON.stringify(ids),
         });
@@ -22,21 +22,24 @@
 
         cartProducts = $cart
             .map((cartItem: CartItem) => {
-                let product = fetchedProducts.find(
-                    (p) => p._id === cartItem.id,
+                let product: CartProduct | undefined = fetchedProducts.find(
+                    (product: CartProduct) => product._id === cartItem.id,
                 );
                 if (product) {
                     let customizedProduct = { ...product };
 
-                    let selectedColor = customizedProduct.variants.find(
-                        (variant: Variant) => variant.id === cartItem.colorId,
-                    );
+                    let selectedColor: Variant | undefined =
+                        customizedProduct.variants.find(
+                            (variant: Variant) =>
+                                variant.id === cartItem.colorId,
+                        );
                     if (selectedColor) {
                         customizedProduct.variants = [selectedColor];
 
-                        let selectedSize = selectedColor?.size.find(
-                            (size: Size) => size.id === cartItem.sizeId,
-                        );
+                        let selectedSize: Size | undefined =
+                            selectedColor?.size.find(
+                                (size: Size) => size.id === cartItem.sizeId,
+                            );
                         if (selectedSize)
                             return {
                                 ...customizedProduct,

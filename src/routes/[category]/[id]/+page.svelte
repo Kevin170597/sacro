@@ -1,29 +1,18 @@
 <script lang="ts">
+    import {
+        ImageDisplay,
+        ProductData,
+        RelatedProducts,
+        CartActionButtons,
+    } from "./snippets";
     import mercadopagologo from "$lib/images/mercadopagologo.png";
-    import { ImageDisplay, ProductData } from "./snippets";
-    import { RelatedProducts } from "./snippets";
     import type { PageData } from "./$types";
-    import { cart } from "$lib/stores";
 
     let { data }: { data: PageData } = $props();
-    const { addToCart } = cart;
 
-    let selectedColor = $state(0);
-    let selectedSize = $state(0);
-    let selectedImage = $state(0);
-
-    const handleAddToCart = () => {
-        const productId = data.product?._id;
-        const colorId = data.product?.variants[selectedColor].id;
-        const sizeId =
-            data.product?.variants[selectedColor].size[selectedSize].id;
-
-        if (productId && colorId && sizeId) {
-            addToCart(productId, colorId, sizeId);
-        } else {
-            console.warn("Missing required data to add to cart.");
-        }
-    };
+    let selectedColor: number = $state(0);
+    let selectedSize: number = $state(0);
+    let selectedImage: number = $state(0);
 </script>
 
 <svelte:head>
@@ -57,21 +46,20 @@
                     bind:selectedImage
                     bind:selectedSize
                 />
-                <b class="text-[14px] text-orange-600"
-                    >Disponible 5 días después de tu compra</b
-                >
+                <b class="text-[14px] text-orange-600">
+                    Disponible 5 días después de tu compra
+                </b>
                 <div class="flex gap-2 items-center">
                     <img src={mercadopagologo} class="w-[10%] h-fit" alt="" />
-                    <p class="text-slate-600 text-[15px]">
+                    <p class="text-slate-600 text-[14px]">
                         Procesamos tu compra a través de MercadoPago.
                     </p>
                 </div>
-                <button
-                    onclick={() => handleAddToCart()}
-                    class="border-2 border-slate-800 p-2 w-full rounded-lg hover:bg-slate-800 transition-colors duration-300 hover:text-white"
-                >
-                    <b>Agregar al carrito</b>
-                </button>
+                <CartActionButtons
+                    product={data.product}
+                    {selectedColor}
+                    {selectedSize}
+                />
             </div>
         </div>
     {/if}

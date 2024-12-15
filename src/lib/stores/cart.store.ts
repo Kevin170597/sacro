@@ -62,7 +62,7 @@ const createCartStore = () => {
                 return updatedItems;
             });
         },
-        subsctractFromCart: (id: string, colorId: string, sizeId: string) => {
+        subtractFromCart: (id: string, colorId: string, sizeId: string) => {
             update((items) => {
                 const existingItem = items.find((item) => item.id === id);
                 if (!existingItem) return items;
