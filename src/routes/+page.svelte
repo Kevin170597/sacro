@@ -10,9 +10,9 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<div class="min-h-[92vh] px-8 py-4 bg-slate-100">
-	<h1 class="mb-2 text-[24px]">Ambos</h1>
-	<div class="grid grid-cols-4 gap-4 items-start">
+<div class="min-h-[92vh] px-4 sm:px-8 py-4 bg-slate-100">
+	<h1 class="mb-2 text-[20px] sm:text-[24px]">Ambos</h1>
+	<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
 		{#each data.data as product}
 			<ProductCard {product} />
 		{/each}

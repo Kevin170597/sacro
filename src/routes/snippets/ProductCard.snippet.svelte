@@ -12,15 +12,15 @@
             <img class="w-[80%]" src={product.variants[0].images[0]} alt="" />
         </div>
         <p
-            class="text-[12px] text-slate-500 border border-slate-300 w-fit px-2 rounded-lg"
+            class="text-[10px] sm:text-[12px] text-slate-500 border border-slate-300 w-fit px-2 rounded-lg"
         >
             {product.variants.length} colores
         </p>
-        <div class="flex gap-2 flex-wrap">
+        <div class="flex gap-1 md:gap-2 flex-wrap">
             {#each product.variants as variant}
                 <button
                     aria-label="color"
-                    class="w-8 h-8 rounded-full border-2 border-gray-300"
+                    class="w-4 h-4 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300"
                     style="background-color: {variant.hexColor};"
                 ></button>
             {/each}
