@@ -27,14 +27,9 @@
         </div>
         <p class="text-[14px]">{product.title}</p>
         <div class="w-full">
-            <b class="text-[22px]"
-                >${product.unit_price.toLocaleString("es-ar")}</b
-            >
-            <p
-                class="bg-gray-500 mt-2 text-white w-fit px-3 rounded-full text-[14px]"
-            >
-                Envío gratis
-            </p>
+            <b class="text-[22px]">
+                ${product.unit_price.toLocaleString("es-ar")}
+            </b>
         </div>
     </div>
 </a>

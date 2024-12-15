@@ -27,9 +27,9 @@
         </div>
         <p class="text-[14px]">{product.title}</p>
         <div class="w-full">
-            <b class="text-[22px]"
-                >${product.unit_price.toLocaleString("es-ar")}</b
-            >
+            <b class="text-[22px]">
+                ${product.unit_price.toLocaleString("es-ar")}
+            </b>
         </div>
     </div>
 </a>
