@@ -50,7 +50,7 @@
             <button
                 class="border-2 border-slate-800 p-2 w-full rounded-lg hover:bg-slate-800 transition-colors duration-300 hover:text-white"
             >
-                <b>Continuar compra</b>
+                <span class="font-bold">Continuar compra</span>
             </button>
         </a>
     </div>

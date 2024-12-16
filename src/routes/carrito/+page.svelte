@@ -10,50 +10,37 @@
     let cartProducts: CartProduct[] = $state([]);
 
     const getManyProductsById = async (): Promise<CartProduct[]> => {
-        let ids: string[] = $cart.map((item: CartItem) => item.id);
-        let res: Response = await fetch("/api/products/many", {
+        const productIds: string[] = $cart.map(({ id }) => id);
+        const response: Response = await fetch("/api/products/many", {
             method: "POST",
-            body: JSON.stringify(ids),
+            body: JSON.stringify(productIds),
         });
-        let fetchedProducts: CartProduct[] = await res.json();
+        const fetchedProducts: CartProduct[] = await response.json();
 
-        cartProducts = $cart
-            .map((cartItem: CartItem) => {
-                let product: CartProduct | undefined = fetchedProducts.find(
-                    (product: CartProduct) => product._id === cartItem.id,
+        return cartProducts = $cart
+            .map(({ id, colorId, sizeId, quantity }: CartItem) => {
+                const product = fetchedProducts.find(
+                    (product: CartProduct) => product._id === id,
                 );
-                if (product) {
-                    let customizedProduct = { ...product };
+                if (!product) return null;
 
-                    let selectedColor: Variant | undefined =
-                        customizedProduct.variants.find(
-                            (variant: Variant) =>
-                                variant.id === cartItem.colorId,
-                        );
-                    if (selectedColor) {
-                        customizedProduct.variants = [selectedColor];
+                const [selectedColor] = product.variants.filter(
+                    (variant) => variant.id === colorId,
+                );
+                if (!selectedColor) return null;
 
-                        let selectedSize: Size | undefined =
-                            selectedColor?.size.find(
-                                (size: Size) => size.id === cartItem.sizeId,
-                            );
-                        if (selectedSize)
-                            return {
-                                ...customizedProduct,
-                                variants: [
-                                    {
-                                        ...selectedColor,
-                                        size: [selectedSize],
-                                    },
-                                ],
-                                quantity: cartItem.quantity,
-                            };
-                    }
-                }
-                return null;
+                const [selectedSize] = selectedColor.size.filter(
+                    (size) => size.id === sizeId,
+                );
+                if (!selectedSize) return null;
+
+                return {
+                    ...product,
+                    variants: [{ ...selectedColor, size: [selectedSize] }],
+                    quantity,
+                };
             })
             .filter((item): item is CartProduct => item !== null);
-        return cartProducts;
     };
 
     $effect(() => {
