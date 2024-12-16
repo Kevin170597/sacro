@@ -26,7 +26,9 @@
 		"zod": "^3.24.1"
 	},
 	"dependencies": {
+		"@types/nodemailer": "^6.4.17",
 		"embla-carousel-svelte": "^8.5.1",
-		"mongoose": "^8.8.3"
+		"mongoose": "^8.8.3",
+		"nodemailer": "^6.9.16"
 	}
 }

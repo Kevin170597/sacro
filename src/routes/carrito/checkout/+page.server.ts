@@ -1,14 +1,20 @@
 import { fail, message, superValidate } from "sveltekit-superforms";
+import { notifyBuyerMail, notifySaleMail } from "$lib/services";
 import { zod } from "sveltekit-superforms/adapters";
-import { z } from "zod";
-import path from "path";
-import fs from "fs/promises";
+import type { Product } from "$lib/interfaces";
 import type { Load } from "@sveltejs/kit";
+import { z } from "zod";
+
+interface CartProduct extends Product {
+    quantity: number;
+}
 
 const pdfSchema = z.object({
     pdf: z
-        .instanceof(File, { message: "PDF is required" })
-        .refine((file) => file.type === "application/pdf", { message: "PDF must be a PDF file" })
+        .instanceof(File, { message: "Por favor, suba un PDF." })
+        .refine((file) => file.type === "application/pdf", { message: "El archivo debe ser un PDF." }),
+    email: z.string().email({ message: "Por favor, ingresa un correo válido." }),
+    products: z.string().min(1, { message: "Algo salió mal." })
 });
 
 export const load: Load = async () => {
@@ -20,24 +26,22 @@ export const load: Load = async () => {
 export const actions = {
     default: async ({ request }) => {
         const form = await superValidate(request, zod(pdfSchema));
+        if (!form.valid) return fail(400, { form });
 
-        if (!form.valid) {
-            console.log(25, "form is not valid");
-            return fail(400, { form });
-        }
+        const { pdf, email, products } = form.data;
+        const productsArray: CartProduct[] = JSON.parse(products);
 
-        const arrayBuffer = await form.data.pdf.arrayBuffer();
+        const arrayBuffer = await pdf.arrayBuffer();
 
-        if (form.data.pdf instanceof File) {
-            const uploadPath = path.join(
-                "uploads", (form.data.pdf as File).name
-            );
+        if (pdf instanceof File) {
             try {
-                await fs.writeFile(uploadPath, new Uint8Array(arrayBuffer));
+                await notifyBuyerMail(email, productsArray);
+                await notifySaleMail(email, Buffer.from(arrayBuffer), (pdf as File).name, productsArray);
             } catch (error) {
-                console.error("Error writing file: ", error);
+                console.error("Error enviando correo: ", error);
+                return fail(400, { form });
             }
-        } else console.log("something went wrong");
+        }
 
         return message(form, "PDF uploaded successfully");
     }

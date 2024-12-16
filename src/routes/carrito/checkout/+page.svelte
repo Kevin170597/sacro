@@ -1,12 +1,16 @@
 <script lang="ts">
-    import type { Product, Variant, Size } from "$lib/interfaces";
-    import { UploadIcon } from "$lib/components/icons";
     import { AliasButton, PdfPreview, ProductCard } from "./snippets";
+    import { UploadIcon } from "$lib/components/icons";
     import { cart, type CartItem } from "$lib/stores";
     import { superForm } from "sveltekit-superforms";
+    import type { Product } from "$lib/interfaces";
 
     let { data } = $props();
-    const { form, enhance } = superForm(data.form);
+    const { form, enhance, message, errors } = superForm(data.form, {
+        onSubmit: ({ formData }) => {
+            formData.append("products", JSON.stringify(cartProducts));
+        },
+    });
 
     interface CartProduct extends Product {
         quantity: number;
@@ -92,13 +96,15 @@
                 <form
                     method="POST"
                     enctype="multipart/form-data"
-                    class="flex flex-col gap-4 items-center w-full"
+                    class="flex flex-col gap-4 items-center w-full mt-4"
                     use:enhance
                 >
-                    <h2>Sube el comprobante de pago.</h2>
                     <div
-                        class="w-full flex flex-col items-center gap-4 px-8 py-4 border-2 border-dotted border-sky-400 rounded-lg"
+                        class="w-full flex flex-col items-center gap-4 px-8 py-4 border-2 border-dotted rounded-lg {$errors.pdf
+                            ? 'border-red-600'
+                            : 'border-sky-400'}"
                     >
+                        <h2>Sube el comprobante de pago.</h2>
                         <UploadIcon />
                         <input
                             onchange={(e) => handleFileChange(e)}
@@ -107,15 +113,37 @@
                             name="pdf"
                             id="pdf"
                             accept=".pdf"
-                            required
                         />
                     </div>
                     {#if pdfFile}
                         <PdfPreview {pdfFile} {fileName} />
                     {/if}
+                    {#if $errors.pdf}
+                        <span class="text-red-600 text-[14px]">
+                            {$errors.pdf}
+                        </span>
+                    {/if}
+                    <div class="w-3/5 items-center flex flex-col gap-2">
+                        <label for="email" class="w-full">Email</label>
+                        <input
+                            class="w-full outline-none border rounded-lg p-2 {$errors.email
+                                ? 'border-red-600'
+                                : 'border-slate-300'}"
+                            placeholder="@"
+                            bind:value={$form.email}
+                            type="text"
+                            name="email"
+                            id="email"
+                        />
+                    </div>
+                    {#if $errors.pdf}
+                        <span class="text-red-600 text-[14px]">
+                            {$errors.email}
+                        </span>
+                    {/if}
                     <button
                         type="submit"
-                        class="border-2 border-slate-800 p-2 w-2/5 rounded-lg hover:bg-slate-800 transition-colors duration-300 hover:text-white"
+                        class="border-2 border-slate-800 p-2 w-3/5 rounded-lg hover:bg-slate-800 transition-colors duration-300 hover:text-white"
                     >
                         <span class="font-bold">Confirmar</span>
                     </button>
