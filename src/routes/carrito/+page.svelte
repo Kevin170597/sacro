@@ -1,18 +1,15 @@
 <script lang="ts">
     import type { Product, Size, Variant } from "$lib/interfaces";
-    import { cart } from "$lib/stores";
-    import type { CartItem } from "$lib/stores";
     import { CartProductCard, PurchaseSummary } from "./snippets";
+    import { cart, type CartItem } from "$lib/stores";
 
     interface CartProduct extends Product {
         quantity: number;
     }
 
     let cartProducts: CartProduct[] = $state([]);
-    let loadingProducts: boolean = $state(false);
 
     const getManyProductsById = async (): Promise<CartProduct[]> => {
-        loadingProducts = true;
         let ids: string[] = $cart.map((item: CartItem) => item.id);
         let res: Response = await fetch("/api/products/many", {
             method: "POST",
@@ -53,7 +50,6 @@
                             };
                     }
                 }
-                loadingProducts = false;
                 return null;
             })
             .filter((item): item is CartProduct => item !== null);
@@ -69,7 +65,7 @@
     <title>Carrito de compras</title>
 </svelte:head>
 
-<div class="min-h-[92vh] px-8 py-4 bg-slate-100">
+<div class="min-h-[90vh] px-8 py-4 bg-slate-100">
     <h1 class="font-bold text-[20px] mb-4">Tu carrito</h1>
     <div class="flex items-start gap-4">
         {#if cartProducts.length}
