@@ -2,9 +2,7 @@
     import type { Product } from "$lib/interfaces";
     import { cart } from "$lib/stores";
 
-    interface CartProduct extends Product {
-        quantity: number;
-    }
+    type CartProduct = Product & { quantity: number };
 
     let { product }: { product: CartProduct } = $props();
 

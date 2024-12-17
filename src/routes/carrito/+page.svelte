@@ -1,11 +1,9 @@
 <script lang="ts">
     import type { Product, Size, Variant } from "$lib/interfaces";
     import { CartProductCard, PurchaseSummary } from "./snippets";
-    import { cart, type CartItem } from "$lib/stores";
+    import { cart } from "$lib/stores";
 
-    interface CartProduct extends Product {
-        quantity: number;
-    }
+    type CartProduct = Product & { quantity: number };
 
     let cartProducts: CartProduct[] = $state([]);
 
@@ -17,30 +15,19 @@
         });
         const fetchedProducts: CartProduct[] = await response.json();
 
-        return cartProducts = $cart
-            .map(({ id, colorId, sizeId, quantity }: CartItem) => {
-                const product = fetchedProducts.find(
-                    (product: CartProduct) => product._id === id,
-                );
-                if (!product) return null;
-
-                const [selectedColor] = product.variants.filter(
-                    (variant) => variant.id === colorId,
-                );
-                if (!selectedColor) return null;
-
-                const [selectedSize] = selectedColor.size.filter(
-                    (size) => size.id === sizeId,
-                );
-                if (!selectedSize) return null;
-
-                return {
-                    ...product,
-                    variants: [{ ...selectedColor, size: [selectedSize] }],
-                    quantity,
-                };
-            })
-            .filter((item): item is CartProduct => item !== null);
+        return (cartProducts = $cart.map(({ id, colorId, sizeId, quantity }) => {
+            const product = fetchedProducts.find((p) => p._id === id);
+            if (!product) return null;
+            const [selectedColor] = product.variants.filter((v) => v.id === colorId);
+            if (!selectedColor) return null;
+            const [selectedSize] = selectedColor.size.filter((s) => s.id === sizeId);
+            if (!selectedSize) return null;
+            return {
+                ...product,
+                variants: [{ ...selectedColor, size: [selectedSize] }],
+                quantity,
+            };
+        }).filter((p): p is CartProduct => p !== null));
     };
 
     $effect(() => {

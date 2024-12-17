@@ -1,9 +1,7 @@
 <script lang="ts">
     import type { Product } from "$lib/interfaces";
 
-    interface CartProduct extends Product {
-        quantity: number;
-    }
+    type CartProduct = Product & { quantity: number };
 
     let { cartProducts }: { cartProducts: CartProduct[] } = $props();
 </script>
@@ -39,8 +37,8 @@
             <b>
                 ${cartProducts
                     .reduce(
-                        (total, product) =>
-                            total + product.quantity * product.unit_price,
+                        (accumulator, { quantity, unit_price }) =>
+                            accumulator + quantity * unit_price,
                         0,
                     )
                     .toLocaleString("es-ar")}

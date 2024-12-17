@@ -1,7 +1,7 @@
 <script lang="ts">
     import { AliasButton, PdfPreview, ProductCard } from "./snippets";
     import { UploadIcon } from "$lib/components/icons";
-    import { cart, type CartItem } from "$lib/stores";
+    import { cart } from "$lib/stores";
     import { superForm } from "sveltekit-superforms";
     import type { Product } from "$lib/interfaces";
 
@@ -12,9 +12,7 @@
         },
     });
 
-    interface CartProduct extends Product {
-        quantity: number;
-    }
+    type CartProduct = Product & { quantity: number };
 
     let cartProducts: CartProduct[] = $state([]);
 
@@ -26,52 +24,46 @@
         });
         const fetchedProducts: CartProduct[] = await response.json();
 
-        return (cartProducts = $cart
-            .map(({ id, colorId, sizeId, quantity }: CartItem) => {
-                const product = fetchedProducts.find(
-                    (product: CartProduct) => product._id === id,
-                );
-                if (!product) return null;
-
-                const [selectedColor] = product.variants.filter(
-                    (variant) => variant.id === colorId,
-                );
-                if (!selectedColor) return null;
-
-                const [selectedSize] = selectedColor.size.filter(
-                    (size) => size.id === sizeId,
-                );
-                if (!selectedSize) return null;
-
-                return {
-                    ...product,
-                    variants: [{ ...selectedColor, size: [selectedSize] }],
-                    quantity,
-                };
-            })
-            .filter((item): item is CartProduct => item !== null));
+        return (cartProducts = $cart.map(({ id, colorId, sizeId, quantity }) => {
+            const product = fetchedProducts.find((p) => p._id === id);
+            if (!product) return null;
+            const [selectedColor] = product.variants.filter((v) => v.id === colorId);
+            if (!selectedColor) return null;
+            const [selectedSize] = selectedColor.size.filter((s) => s.id === sizeId);
+            if (!selectedSize) return null;
+            return {
+                ...product,
+                variants: [{ ...selectedColor, size: [selectedSize] }],
+                quantity,
+            };
+        }).filter((p): p is CartProduct => p !== null));
     };
 
     $effect(() => {
         getManyProductsById();
     });
 
-    let pdfFile: string | null = $state(null);
+    let pdfFile: string | File | null = $state(null);
     let fileName: string | null = $state(null);
 
-    const handleFileChange = (event: any) => {
-        const file = event?.target.files[0];
-        if (file && file.type === "application/pdf") {
-            pdfFile = file;
-            fileName = file.name;
+    const handleFileChange = (event: Event): void => {
+        const target = event.target as HTMLInputElement;
+        const selectedFile = target.files?.[0] as File | undefined;
+        if (selectedFile && selectedFile.type === "application/pdf") {
+            pdfFile = selectedFile;
+            fileName = selectedFile.name;
             const reader = new FileReader();
-            reader.onload = () => {
+            reader.onload = (): void => {
                 pdfFile = reader.result as string;
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(selectedFile);
         }
     };
 </script>
+
+<svelte:head>
+    <title>Checkout</title>
+</svelte:head>
 
 <div class="min-h-[85vh] bg-slate-100 flex justify-center items-start py-4">
     <div
@@ -86,8 +78,8 @@
                 <b class="text-[36px] text-center">
                     ${cartProducts
                         .reduce(
-                            (total, product) =>
-                                total + product.quantity * product.unit_price,
+                            (accumulator, { quantity, unit_price }) =>
+                                accumulator + quantity * unit_price,
                             0,
                         )
                         .toLocaleString("es-ar")}
@@ -136,7 +128,7 @@
                             id="email"
                         />
                     </div>
-                    {#if $errors.pdf}
+                    {#if $errors.email}
                         <span class="text-red-600 text-[14px]">
                             {$errors.email}
                         </span>
