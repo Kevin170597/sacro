@@ -2,7 +2,7 @@ import { fail, message, superValidate } from "sveltekit-superforms";
 import { notifyBuyerMail, notifySaleMail } from "$lib/services";
 import { zod } from "sveltekit-superforms/adapters";
 import type { Product } from "$lib/interfaces";
-import type { Load } from "@sveltejs/kit";
+import { redirect, type Load } from "@sveltejs/kit";
 import { z } from "zod";
 
 interface CartProduct extends Product {
@@ -43,6 +43,6 @@ export const actions = {
             }
         }
 
-        return message(form, "PDF uploaded successfully");
+        return redirect(303, "/");
     }
 };

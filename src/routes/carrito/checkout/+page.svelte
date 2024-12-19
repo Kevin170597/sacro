@@ -1,12 +1,12 @@
 <script lang="ts">
     import { AliasButton, PdfPreview, ProductCard } from "./snippets";
     import { UploadIcon } from "$lib/components/icons";
-    import { cart } from "$lib/stores";
     import { superForm } from "sveltekit-superforms";
     import type { Product } from "$lib/interfaces";
+    import { cart } from "$lib/stores";
 
     let { data } = $props();
-    const { form, enhance, message, errors } = superForm(data.form, {
+    const { form, enhance, message, errors, delayed } = superForm(data.form, {
         onSubmit: ({ formData }) => {
             formData.append("products", JSON.stringify(cartProducts));
         },
@@ -24,19 +24,25 @@
         });
         const fetchedProducts: CartProduct[] = await response.json();
 
-        return (cartProducts = $cart.map(({ id, colorId, sizeId, quantity }) => {
-            const product = fetchedProducts.find((p) => p._id === id);
-            if (!product) return null;
-            const [selectedColor] = product.variants.filter((v) => v.id === colorId);
-            if (!selectedColor) return null;
-            const [selectedSize] = selectedColor.size.filter((s) => s.id === sizeId);
-            if (!selectedSize) return null;
-            return {
-                ...product,
-                variants: [{ ...selectedColor, size: [selectedSize] }],
-                quantity,
-            };
-        }).filter((p): p is CartProduct => p !== null));
+        return (cartProducts = $cart
+            .map(({ id, colorId, sizeId, quantity }) => {
+                const product = fetchedProducts.find((p) => p._id === id);
+                if (!product) return null;
+                const [selectedColor] = product.variants.filter(
+                    (v) => v.id === colorId,
+                );
+                if (!selectedColor) return null;
+                const [selectedSize] = selectedColor.size.filter(
+                    (s) => s.id === sizeId,
+                );
+                if (!selectedSize) return null;
+                return {
+                    ...product,
+                    variants: [{ ...selectedColor, size: [selectedSize] }],
+                    quantity,
+                };
+            })
+            .filter((p): p is CartProduct => p !== null));
     };
 
     $effect(() => {
@@ -134,10 +140,17 @@
                         </span>
                     {/if}
                     <button
+                        disabled={$delayed}
                         type="submit"
-                        class="border-2 border-slate-800 p-2 w-3/5 rounded-lg hover:bg-slate-800 transition-colors duration-300 hover:text-white"
+                        class="border-2 p-2 w-3/5 rounded-lg transition-colors duration-300 {$delayed
+                            ? 'bg-green-500 border-green-400 hover:bg-green-600 animate-pulse text-white'
+                            : 'bg-white border-slate-800 hover:bg-slate-800 hover:text-white'}"
                     >
-                        <span class="font-bold">Confirmar</span>
+                        <span class="font-bold">
+                            {$delayed
+                                ? "Finalizando compra..."
+                                : "Finalizar compra"}
+                        </span>
                     </button>
                 </form>
             </div>
