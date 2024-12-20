@@ -1,4 +1,4 @@
-import { fail, message, superValidate } from "sveltekit-superforms";
+import { fail, superValidate } from "sveltekit-superforms";
 import { notifyBuyerMail, notifySaleMail } from "$lib/services";
 import { zod } from "sveltekit-superforms/adapters";
 import type { Product } from "$lib/interfaces";

@@ -23,7 +23,7 @@ export const getProductById = async (id: string): Promise<Product | null> => {
         }
 
         await dbConnect();
-        return await ProductModel.findOne({ _id: id });
+        return  await ProductModel.findById({ _id: id });
     } catch (error) {
         console.error(`Error fetching product with id ${id}:`, error);
         return null;

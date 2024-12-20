@@ -6,7 +6,7 @@
 </script>
 
 <div class="min-h-[100vh] bg-slate-200">
-	<Header />
+	<!-- <Header /> -->
 	{@render children()}
-	<Footer />
+	<!-- <Footer /> -->
 </div>
