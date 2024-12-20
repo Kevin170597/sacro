@@ -42,3 +42,13 @@ export const variantsSchema = z.object({
 });
 
 export type VariantsSchema = typeof variantsSchema;
+
+export const productSchema = z.object({
+    title: z.string(titleSchema),
+    unit_price: z.number(priceSchema),
+    discount: z.number(discountSchema),
+    description: z.string(descriptionSchema),
+    variants: z.array(variantSchema)
+});
+
+export type ProductSchema = typeof productSchema;

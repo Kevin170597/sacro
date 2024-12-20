@@ -7,10 +7,10 @@
 <div class="flex bg-white rounded-lg border border-slate-300">
     <img class="w-[8%] h-fit p-4" src={product.variants[0].images[0]} alt="" />
     <div class="py-2 px-4 w-[30%]">
-        <span class="text-[14px] text-slate-400">{product._id}</span>
-        <a class="hover:underline" href="/admin/productos/{product._id}"
-            >{product.title}</a
-        >
+        <p class="text-[14px] text-slate-400">{product._id}</p>
+        <a class="hover:underline" href="/admin/productos/{product._id}">
+            <span class="font-bold text-[14px]">{product.title}</span>
+        </a>
     </div>
     <div class="py-2 px-4 flex flex-wrap items-center w-[20%] gap-2">
         {#each product.variants as variant}
