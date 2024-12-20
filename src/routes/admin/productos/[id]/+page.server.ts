@@ -8,7 +8,7 @@ import { fail } from "@sveltejs/kit";
 
 const sizeSchema = z.object({
     id: z.string().min(1, { message: "El id es requerido." }),
-    name: z.string().min(1, { message: "El nombre es requerido." }),
+    name: z.string().min(1, { message: "El talle es requerido." }),
 });
 
 const variantSchema = z.object({
@@ -43,35 +43,32 @@ const descriptionSchema = z.object({
     description: z.string().min(1, { message: "La descripción es requerida." }),
 });
 
+const variantsSchema = z.object({
+    variants: z.array(variantSchema).min(1, { message: "Debe haber al menos una variante." }),
+});
+
 export const load: PageServerLoad = async ({ params }: { params: { id: string } }) => {
     let product = await getProductById(params.id);
     product = JSON.parse(JSON.stringify(product));
 
-    const form = await superValidate(product, zod(productSchema));
     const titleForm = await superValidate(product, zod(titleSchema));
     const unitPriceForm = await superValidate(product, zod(priceSchema));
     const discountForm = await superValidate(product, zod(discountSchema));
     const descriptionForm = await superValidate(product, zod(descriptionSchema));
+    const variantsForm = await superValidate(product, zod(variantsSchema));
 
-    if (!form.valid || !titleForm.valid || !unitPriceForm.valid || !discountForm.valid || !descriptionForm.valid) return {
-        form: { ...form, error: "Validation failed" },
+    if (!titleForm.valid || !unitPriceForm.valid || !discountForm.valid || !descriptionForm.valid || !variantsForm.valid) return {
         titleForm: { ...titleForm, error: "Validation failed" },
         unitPriceForm: { ...unitPriceForm, error: "Validation failed" },
         discountForm: { ...discountForm, error: "Validation failed" },
         descriptionForm: { ...descriptionForm, error: "Validation failed" },
+        variantsForm: { ...variantsForm, error: "Validation failed" },
     };
 
-    return { form, titleForm, unitPriceForm, discountForm, descriptionForm };
+    return { titleForm, unitPriceForm, discountForm, descriptionForm, variantsForm };
 };
 
 export const actions = {
-    all: async ({ request }) => {
-        const form = await superValidate(request, zod(productSchema));
-        if (!form.valid) return fail(400, { form });
-
-        console.log(50, form.data)
-        //console.log(49, form.data.variants.map((variant) => variant.size.map((size) => size)))
-    },
     title: async ({ request }) => {
         const form = await superValidate(request, zod(titleSchema));
         if (!form.valid) return fail(400, { form });
@@ -93,6 +90,15 @@ export const actions = {
     description: async ({ request }) => {
         const form = await superValidate(request, zod(descriptionSchema));
         if (!form.valid) return fail(400, { form });
+
+        console.log(59, form.data);
+    },
+    variants: async ({ request }) => {
+        const form = await superValidate(request, zod(variantsSchema));
+        if (!form.valid) {
+            console.log(108, form)
+            return fail(400, { form })
+        };
 
         console.log(59, form.data);
     },
