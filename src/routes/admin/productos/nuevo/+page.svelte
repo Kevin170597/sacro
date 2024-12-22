@@ -2,6 +2,15 @@
     import { superForm } from "sveltekit-superforms";
     import type { PageData } from "./$types";
     import { nanoid } from "nanoid";
+    import {
+        TitleInput,
+        UnitPriceInput,
+        DiscountInput,
+        DescriptionInput,
+        VariantNameInput,
+        VariantColorInput,
+        VariantSizeNameInput
+    } from "./snippets";
 
     let { data }: { data: PageData } = $props();
 
@@ -22,7 +31,6 @@
         ];
     };
 
-    let dropped: string = $state("");
     let variantDropped: number | null = $state(null);
     let sizeDropped: number | null = $state(null);
 </script>
@@ -33,106 +41,30 @@
         method="POST"
         use:enhance
     >
-        <div
-            class="bg-white flex flex-col gap-4 px-8 py-4 border rounded-lg {$errors.title
-                ? 'border-red-600'
-                : 'border-slate-300'}"
-        >
-            <div>
-                <label
-                    for="title"
-                    class="font-bold text-[14px] px-2 {$errors.title
-                        ? 'bg-red-100  text-red-400 font-bold rounded-full'
-                        : ''}"
-                >
-                    Título
-                </label>
-            </div>
-            <input
-                class="border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
-                type="text"
-                name="title"
-                id="title"
-                placeholder="Escribir..."
-                bind:value={$form.title}
-            />
-        </div>
-        <div
-            class="bg-white flex flex-col gap-4 px-8 py-4 border rounded-lg {$errors.unit_price
-                ? 'border-red-600'
-                : 'border-slate-300'}"
-        >
-            <div>
-                <label
-                    for="unit_price"
-                    class="font-bold text-[14px] px-2 {$errors.unit_price
-                        ? 'bg-red-100  text-red-400 font-bold rounded-full'
-                        : ''}"
-                >
-                    Precio
-                </label>
-            </div>
-            <div class="flex gap-2 items-center">
-                <p>$</p>
-                <input
-                    class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
-                    type="number"
-                    name="unit_price"
-                    id="unit_price"
-                    placeholder="0"
-                    bind:value={$form.unit_price}
-                />
-            </div>
-        </div>
-        <div
-            class="bg-white flex flex-col gap-4 px-8 py-4 border rounded-lg {$errors.discount
-                ? 'border-red-600'
-                : 'border-slate-300'}"
-        >
-            <label for="discount" class="font-bold text-[14px]">
-                Descuento
-            </label>
-            <div class="flex gap-2 items-center">
-                <p>%</p>
-                <input
-                    class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
-                    type="number"
-                    name="discount"
-                    id="discount"
-                    placeholder="Escribir..."
-                    bind:value={$form.discount}
-                />
-            </div>
-        </div>
-        <div
-            class="bg-white flex flex-col gap-4 px-8 py-4 border rounded-lg {$errors.description
-                ? 'border-red-600'
-                : 'border-slate-300 '}"
-        >
-            <div>
-                <label
-                    for="description"
-                    class="font-bold text-[14px] px-2 {$errors.description
-                        ? 'bg-red-100  text-red-400 font-bold rounded-full'
-                        : ''}"
-                >
-                    Descripción
-                </label>
-            </div>
-            <textarea
-                class="border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
-                name="description"
-                id="description"
-                placeholder="Escribie una descripción..."
-                bind:value={$form.description}
-            ></textarea>
-        </div>
+        <TitleInput bind:value={$form.title} errors={$errors.title} />
+        <UnitPriceInput
+            bind:value={$form.unit_price}
+            errors={$errors.unit_price}
+        />
+        <DiscountInput bind:value={$form.discount} errors={$errors.discount} />
+        <DescriptionInput
+            bind:value={$form.description}
+            errors={$errors.description}
+        />
+        
         <div
             class="bg-white flex flex-col px-8 py-4 border rounded-lg {$errors.variants
                 ? 'border-red-600'
                 : 'border-slate-300'}"
         >
-            <span class="font-bold text-[14px] mb-4">Variants</span>
+            <label
+                for="variants"
+                class="w-fit font-bold text-[14px] px-2 mb-4 {$errors.variants
+                    ? 'bg-red-100  text-red-400 font-bold rounded-full'
+                    : ''}"
+            >
+                Variantes
+            </label>
             <div class="border border-slate-300 rounded-lg">
                 {#each $form.variants as variant, variantIndex}
                     <div
@@ -193,40 +125,14 @@
                     </div>
                     {#if variantDropped === variantIndex}
                         <div class="flex px-4 pb-4">
-                            <div class="w-1/2 p-2 flex flex-col gap-2">
-                                <label
-                                    class="text-[12px] text-slate-400"
-                                    for={$form.variants[variantIndex].name}
-                                >
-                                    Nombre de la variante
-                                </label>
-                                {#if $errors.variants?.[variantIndex].name}
-                                    <span class="text-red-600 text-[12px]">
-                                        {$errors.variants?.[variantIndex]?.name}
-                                    </span>
-                                {/if}
-                                <input
-                                    class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
-                                    type="text"
-                                    name={$form.variants[variantIndex].name}
-                                    bind:value={$form.variants[variantIndex]
-                                        .name}
-                                    placeholder="variant name"
-                                />
-                            </div>
-                            <div class="w-1/2 p-2 flex flex-col gap-2">
-                                <label
-                                    class="text-[12px] text-slate-400"
-                                    for={$form.variants[variantIndex].name}
-                                    >Color</label
-                                >
-                                <input
-                                    class="w-full bg-white h-full border border-slate-400 p-2 rounded-lg outline-none cursor-pointer"
-                                    type="color"
-                                    bind:value={$form.variants[variantIndex]
-                                        .hexColor}
-                                />
-                            </div>
+                            <VariantNameInput
+                                bind:value={$form.variants[variantIndex].name}
+                                errors={$errors.variants?.[variantIndex].name}
+                            />
+                            <VariantColorInput
+                                bind:value={$form.variants[variantIndex]
+                                    .hexColor}
+                            />
                         </div>
                         <div class="px-4 pb-4">
                             {#if $errors.variants?.[variantIndex].images}
@@ -272,31 +178,14 @@
                                             </span>
                                         </button>
                                         {#if sizeDropped === sizeIndex}
-                                            <div
-                                                class="px-8 py-4 flex flex-col gap-2"
-                                            >
-                                                {#if $errors.variants?.[variantIndex].size?.[sizeIndex].name}
-                                                    <span
-                                                        class="text-red-600 text-[12px]"
-                                                    >
-                                                        {$errors.variants?.[
-                                                            variantIndex
-                                                        ].size?.[sizeIndex]
-                                                            .name}
-                                                    </span>
-                                                {/if}
-                                                <input
-                                                    class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
-                                                    type="text"
-                                                    name={$form.variants[
-                                                        sizeIndex
-                                                    ].size[sizeIndex].name}
-                                                    bind:value={$form.variants[
-                                                        sizeIndex
-                                                    ].size[sizeIndex].name}
-                                                    placeholder="X"
-                                                />
-                                            </div>
+                                            <VariantSizeNameInput
+                                                bind:value={$form.variants[
+                                                    variantIndex
+                                                ].size[sizeIndex].name}
+                                                errors={$errors.variants?.[
+                                                    variantIndex
+                                                ].size?.[sizeIndex].name}
+                                            />
                                         {/if}
                                     </div>
                                 {/each}
