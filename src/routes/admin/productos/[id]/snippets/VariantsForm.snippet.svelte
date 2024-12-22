@@ -18,7 +18,7 @@
     <button
         onclick={() =>
             dropped === "variants" ? (dropped = "") : (dropped = "variants")}
-        class="text-left flex flex-col gap-2 hover:bg-gray-100 px-8 py-4 {dropped ===
+        class="text-left flex flex-col gap-2 hover:bg-gray-100 px-8 py-4 rounded-lg {dropped ===
         'variants'
             ? 'border-b border-slate-300 bg-slate-100'
             : ''}"
@@ -43,7 +43,7 @@
                         ? 'rounded-b-lg border-b'
                         : 'border-b-0'}
                         {variantDropped === variantIndex
-                        ? 'rounded-b-lg border-b bg-slate-100'
+                        ? ' border-b bg-slate-100'
                         : ''}"
                 >
                     <button
@@ -88,16 +88,14 @@
                             </label>
                             {#if $errors.variants?.[variantIndex].name}
                                 <span class="text-red-600 text-[12px]">
-                                    {$errors.variants?.[variantIndex]
-                                        ?.name}
+                                    {$errors.variants?.[variantIndex]?.name}
                                 </span>
                             {/if}
                             <input
                                 class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
                                 type="text"
                                 name={$form.variants[variantIndex].name}
-                                bind:value={$form.variants[variantIndex]
-                                    .name}
+                                bind:value={$form.variants[variantIndex].name}
                                 placeholder="variant name"
                             />
                         </div>
@@ -130,9 +128,9 @@
                                             ? (sizeDropped = null)
                                             : (sizeDropped = sizeIndex)}
                                     type="button"
-                                    class="px-8 py-4 text-left {sizeDropped ===
+                                    class="px-8 py-4 text-left rounded-lg {sizeDropped ===
                                     sizeIndex
-                                        ? 'border-b border-slate-300 bg-slate-100'
+                                        ? `rounded-b-none border-b border-slate-300 bg-slate-100 ${sizeIndex === variant.size.length - 1 ? 'rounded-t-none' : ''}`
                                         : ''}"
                                 >
                                     <span class="text-[14px]"> Talle </span>
@@ -154,9 +152,8 @@
                                         <input
                                             class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
                                             type="text"
-                                            name={$form.variants[
-                                                sizeIndex
-                                            ].size[sizeIndex].name}
+                                            name={$form.variants[sizeIndex]
+                                                .size[sizeIndex].name}
                                             bind:value={$form.variants[
                                                 sizeIndex
                                             ].size[sizeIndex].name}
