@@ -1,11 +1,11 @@
+import type { PageServerLoad, Actions } from "./$types";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { productSchema } from "../[id]/helpers";
-import type { Load } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 import { nanoid } from "nanoid";
 
-export const load: Load = async () => {
+export const load: PageServerLoad = async () => {
     const form = await superValidate(zod(productSchema));
     let defaultVariant = {
         id: nanoid(5),
@@ -18,7 +18,7 @@ export const load: Load = async () => {
     return { form };
 };
 
-export const actions = {
+export const actions: Actions = {
     default: async ({ request }) => {
         const form = await superValidate(request, zod(productSchema));
         console.log(24, form.data)

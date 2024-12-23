@@ -1,8 +1,8 @@
 import { titleSchema, priceSchema, discountSchema, descriptionSchema, variantsSchema } from "./helpers";
 import { superValidate } from "sveltekit-superforms/server";
+import type { PageServerLoad, Actions } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { getProductById } from "$lib/services";
-import type { PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params }: { params: { id: string } }) => {
@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ params }: { params: { id: string } 
     return { titleForm, unitPriceForm, discountForm, descriptionForm, variantsForm };
 };
 
-export const actions = {
+export const actions: Actions = {
     title: async ({ request }) => {
         const form = await superValidate(request, zod(titleSchema));
         if (!form.valid) return fail(400, { form });
