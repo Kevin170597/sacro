@@ -24,7 +24,7 @@
                 </div>
             {/if}
         </div>
-        <div class="h-[92vh] bg-red-200">
+        <div class="h-[92vh]">
             {@render children()}
         </div>
     </div>

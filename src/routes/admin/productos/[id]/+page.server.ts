@@ -3,11 +3,12 @@ import { superValidate } from "sveltekit-superforms/server";
 import type { PageServerLoad, Actions } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
 import { getProductById } from "$lib/services";
-import { fail } from "@sveltejs/kit";
+import { error, fail } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params }: { params: { id: string } }) => {
     let product = await getProductById(params.id);
     product = JSON.parse(JSON.stringify(product));
+    if (!product) return error(404, { message: "El producto no existe" });
 
     const titleForm = await superValidate(product, zod(titleSchema));
     const unitPriceForm = await superValidate(product, zod(priceSchema));
@@ -23,7 +24,7 @@ export const load: PageServerLoad = async ({ params }: { params: { id: string } 
         variantsForm: { ...variantsForm, error: "Validation failed" },
     };
 
-    return { titleForm, unitPriceForm, discountForm, descriptionForm, variantsForm };
+    return { product, titleForm, unitPriceForm, discountForm, descriptionForm, variantsForm };
 };
 
 export const actions: Actions = {

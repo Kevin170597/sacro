@@ -36,9 +36,18 @@
             { id: nanoid(5), name: "XS" },
         ];
     };
+
+    const addVariantImage = (variantIndex: number) => {
+        $form.variants[variantIndex].images = [
+            ...$form.variants[variantIndex].images,
+            "",
+        ];
+    };
 </script>
 
-<div class="min-h-[100vh] px-4 sm:px-8 py-4 bg-slate-100 flex flex-col gap-4">
+<div
+    class="h-[92vh] overflow-auto px-4 sm:px-8 py-4 bg-slate-100 flex flex-col gap-4"
+>
     <form
         class="px-8 py-4 w-4/5 mx-auto flex flex-col gap-4"
         method="POST"
@@ -59,14 +68,13 @@
                 ? 'border-red-600'
                 : 'border-slate-300'}"
         >
-            <label
-                for="variants"
+            <span
                 class="w-fit font-bold text-[14px] px-2 mb-4 {$errors.variants
                     ? 'bg-red-100  text-red-400 font-bold rounded-full'
                     : ''}"
             >
                 Variantes
-            </label>
+            </span>
             <div class="border border-slate-300 rounded-lg">
                 {#each $form.variants as variant, variantIndex}
                     <Variants
@@ -98,6 +106,44 @@
                             >
                                 <span class="font-bold text-[12px]">
                                     Agregar talle
+                                </span>
+                            </button>
+                        {/snippet}
+                        {#snippet imageInputChildren()}
+                            {#each variant.images as _, imageIndex}
+                                <div class="flex gap-4 w-full px-8 py-4">
+                                    <div class="w-[80%] flex flex-col gap-2">
+                                        <label class="text-[12px] text-slate-400" for={`${imageIndex}`}>
+                                            Imagen
+                                        </label>
+                                        <input
+                                            class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none"
+                                            type="text"
+                                            id={`${imageIndex}`}
+                                            name={$form.variants[variantIndex]
+                                                .images[imageIndex]}
+                                            bind:value={$form.variants[
+                                                variantIndex
+                                            ].images[imageIndex]}
+                                            placeholder="URL"
+                                        />
+                                    </div>
+                                    <img
+                                        class="w-[20%] aspect-square object-cover rounded-lg"
+                                        src={variant.images[imageIndex]}
+                                        alt=""
+                                    />
+                                </div>
+                            {/each}
+                        {/snippet}
+                        {#snippet addImageChildren()}
+                            <button
+                                class="bg-sky-200 hover:bg-sky-300 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg"
+                                type="button"
+                                onclick={() => addVariantImage(variantIndex)}
+                            >
+                                <span class="font-bold text-[12px]">
+                                    Agregar imagen
                                 </span>
                             </button>
                         {/snippet}

@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from "./$types";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { productSchema } from "../[id]/helpers";
+import { addProduct } from "$lib/services";
 import { fail } from "@sveltejs/kit";
 import { nanoid } from "nanoid";
 
@@ -21,12 +22,10 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
     default: async ({ request }) => {
         const form = await superValidate(request, zod(productSchema));
-        console.log(24, form.data)
         if (!form.valid) {
-            console.log(108, form.errors)
             return fail(400, { form })
         };
 
-        console.log(59, form.data);
+        await addProduct(form.data);
     }
 }

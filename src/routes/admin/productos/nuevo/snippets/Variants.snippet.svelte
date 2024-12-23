@@ -1,9 +1,6 @@
 <script lang="ts">
     import type { Size } from "$lib/interfaces";
-    import {
-        VariantColorInput,
-        VariantNameInput,
-    } from ".";
+    import { VariantColorInput, VariantNameInput } from ".";
 
     let {
         variantName = $bindable(),
@@ -12,7 +9,9 @@
         variantSizes = $bindable(),
         variantIndex,
         sizeInputChildren,
-        addSizeChildren
+        addSizeChildren,
+        imageInputChildren,
+        addImageChildren,
     }: {
         variantName: string;
         variantNameErrors: string[] | undefined;
@@ -21,6 +20,8 @@
         variantIndex: number;
         sizeInputChildren: any;
         addSizeChildren: any;
+        imageInputChildren: any;
+        addImageChildren: any;
     } = $props();
 
     let variantDropped: number | null = $state(null);
@@ -52,19 +53,6 @@
             </span>
         {/if}
     </button>
-    <!-- <div class="w-[40%] flex justify-center">
-        {#if variant.images.length > 0}
-            <img
-                class="w-[18%] h-fit aspect-square object-cover rounded-full border border-slate-300"
-                src={variant.images[0]}
-                alt=""
-            />
-        {:else}
-            <div
-                class="w-[18%] h-fit aspect-square rounded-full border border-slate-300"
-            ></div>
-        {/if}
-    </div> -->
     <div class="w-[20%]">
         <p class="text-[14px] text-slate-400">Talles:</p>
         <p class="text-[12px]">
@@ -76,6 +64,12 @@
     <div class="flex px-4 pb-4">
         <VariantNameInput bind:value={variantName} errors={variantNameErrors} />
         <VariantColorInput bind:value={variantColor} />
+    </div>
+    <div class="px-4 pb-4">
+        <div class="border border-slate-300 rounded-lg">
+            {@render imageInputChildren()}
+        </div>
+        {@render addImageChildren()}
     </div>
     <div class="px-4 pb-4">
         <div class="border border-slate-300 rounded-lg">
