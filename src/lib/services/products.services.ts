@@ -69,3 +69,13 @@ export const updateProduct = async (id: string, product: Partial<Product>): Prom
         return [];
     }
 };
+
+export const deleteProduct = async (id: string) => {
+    try {
+        await dbConnect();
+        return await ProductModel.deleteOne({ _id: id });
+    } catch (error) {
+        console.error("Error deleting product.", error);
+        return [];
+    }
+};

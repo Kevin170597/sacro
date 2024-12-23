@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Product } from "$lib/interfaces";
+    import { enhance } from "$app/forms";
 
     let { product }: { product: Product } = $props();
 </script>
@@ -23,4 +24,18 @@
     <div class="py-2 px-4 flex items-center w-[10%]">
         <p>${product.unit_price.toLocaleString("es-ar")}</p>
     </div>
+    <form
+        method="POST"
+        action="?/delete"
+        class="py-2 px-4 flex items-center justify-end w-[32%]"
+        use:enhance
+    >
+        <input type="text" value={product._id} hidden name="id" />
+        <button
+            type="submit"
+            class="px-4 py-2 bg-red-100 hover:bg-red-200 transition-all duration-200 rounded-lg"
+        >
+            <span class="font-bold text-[12px] text-red-600">Eliminar</span>
+        </button>
+    </form>
 </div>
