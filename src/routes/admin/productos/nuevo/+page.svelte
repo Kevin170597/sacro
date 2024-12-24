@@ -1,5 +1,7 @@
 <script lang="ts">
     import { superForm } from "sveltekit-superforms";
+    import { fetchUploadImages } from "./helpers";
+    import type { Size } from "$lib/interfaces";
     import type { PageData } from "./$types";
     import { nanoid } from "nanoid";
     import {
@@ -16,6 +18,16 @@
     const { form, enhance, errors } = superForm(data.form, {
         dataType: "json",
     });
+
+    const handleUploadImage = async (event: Event, variantIndex: number) => {
+        const url = await fetchUploadImages(event);
+        if (url) {
+            $form.variants[variantIndex].images = [
+                ...$form.variants[variantIndex].images,
+                url,
+            ];
+        }
+    };
 
     const addVariant = () => {
         $form.variants = [
@@ -44,6 +56,8 @@
         ];
     };
 </script>
+
+<svelte:head><title>Nuevo</title></svelte:head>
 
 <div
     class="h-[92vh] overflow-auto px-4 sm:px-8 py-4 bg-slate-100 flex flex-col gap-4"
@@ -110,31 +124,26 @@
                             </button>
                         {/snippet}
                         {#snippet imageInputChildren()}
-                            {#each variant.images as _, imageIndex}
-                                <div class="flex gap-4 w-full px-8 py-4">
-                                    <div class="w-[80%] flex flex-col gap-2">
-                                        <label class="text-[12px] text-slate-400" for={`${imageIndex}`}>
-                                            Imagen
-                                        </label>
-                                        <input
-                                            class="w-full border border-slate-300 rounded-lg px-4 py-2 outline-none"
-                                            type="text"
-                                            id={`${imageIndex}`}
-                                            name={$form.variants[variantIndex]
-                                                .images[imageIndex]}
-                                            bind:value={$form.variants[
-                                                variantIndex
-                                            ].images[imageIndex]}
-                                            placeholder="URL"
-                                        />
-                                    </div>
+                            <label class="bg-sky-200 p-4 border border-sky-200 rounded-lg">
+                                <input
+                                    class="hidden"
+                                    onchange={(e) =>
+                                        handleUploadImage(e, variantIndex)}
+                                    type="file"
+                                    name=""
+                                    id=""
+                                />
+                                <span>Seleccione una imagen +</span>
+                            </label>
+                            <div class="flex gap-2">
+                                {#each variant.images as image, imageIndex}
                                     <img
-                                        class="w-[20%] aspect-square object-cover rounded-lg"
-                                        src={variant.images[imageIndex]}
+                                        class="w-[30px] h-[30px]"
+                                        src={image}
                                         alt=""
                                     />
-                                </div>
-                            {/each}
+                                {/each}
+                            </div>
                         {/snippet}
                         {#snippet addImageChildren()}
                             <button
