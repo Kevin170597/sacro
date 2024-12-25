@@ -1,7 +1,6 @@
 <script lang="ts">
     import { superForm } from "sveltekit-superforms";
     import { fetchUploadImages } from "./helpers";
-    import type { Size } from "$lib/interfaces";
     import type { PageData } from "./$types";
     import { nanoid } from "nanoid";
     import {
@@ -124,7 +123,9 @@
                             </button>
                         {/snippet}
                         {#snippet imageInputChildren()}
-                            <label class="bg-sky-200 p-4 border border-sky-200 rounded-lg">
+                            <label
+                                class="bg-sky-200 p-4 border border-sky-200 rounded-lg"
+                            >
                                 <input
                                     class="hidden"
                                     onchange={(e) =>
