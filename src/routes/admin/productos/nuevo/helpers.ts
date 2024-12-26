@@ -10,7 +10,7 @@
      * @param {number} variantIndex - The index of the variant that the image belongs to.
      * @returns {Promise<string | undefined>} A promise that resolves to the URL of the uploaded image, or undefined if there was an error.
      */
-export const fetchUploadImages = async (
+export const fetchUploadImage = async (
     event: Event,
 ): Promise<string | undefined> => {
     const target = event.target as HTMLInputElement;

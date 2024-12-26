@@ -6,8 +6,10 @@
 </script>
 
 <div class="flex bg-white rounded-lg border border-slate-300">
-    <img class="w-[8%] h-fit p-4" src={product.variants[0].images[0]} alt="" />
-    <div class="py-2 px-4 w-[30%]">
+    <div class="w-[6%] flex justify-center items-center">
+        <img class="p-2" src={product.variants[0].images[0]} alt="" />
+    </div>
+    <div class="py-2 px-4 w-[44%]">
         <p class="text-[14px] text-slate-400">{product._id}</p>
         <a class="hover:underline" href="/admin/productos/{product._id}">
             <span class="font-bold text-[14px]">{product.title}</span>
@@ -21,13 +23,13 @@
             ></div>
         {/each}
     </div>
-    <div class="py-2 px-4 flex items-center w-[10%]">
+    <div class="py-2 px-4 flex justify-center items-center w-[15%]">
         <p>${product.unit_price.toLocaleString("es-ar")}</p>
     </div>
     <form
         method="POST"
         action="?/delete"
-        class="py-2 px-4 flex items-center justify-end w-[32%]"
+        class="py-2 px-4 flex items-center justify-center w-[15%]"
         use:enhance
     >
         <input type="text" value={product._id} hidden name="id" />

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { superForm } from "sveltekit-superforms";
-    import { fetchUploadImages } from "./helpers";
+    import { fetchUploadImage } from "./helpers";
     import type { PageData } from "./$types";
     import { nanoid } from "nanoid";
     import {
@@ -9,6 +9,7 @@
         DiscountInput,
         DescriptionInput,
         VariantSize,
+        VariantImages,
         Variants,
     } from "./snippets";
 
@@ -18,27 +19,16 @@
         dataType: "json",
     });
 
-    let uploadingPreview: string | null = $state(null);
-    let uploading: boolean = $state(false);
-
     const handleUploadImage = async (
         event: Event,
         variantIndex: number,
     ): Promise<void> => {
-        const target = event.target as HTMLInputElement;
-        const file = target.files?.[0] as File | undefined;
-        if (file) {
-            uploadingPreview = URL.createObjectURL(file);
-            uploading = true;
-            const url = await fetchUploadImages(event);
-            if (url) {
-                $form.variants[variantIndex].images = [
-                    ...$form.variants[variantIndex].images,
-                    url,
-                ];
-                uploadingPreview = null;
-                uploading = false;
-            }
+        const url = await fetchUploadImage(event);
+        if (url) {
+            $form.variants[variantIndex].images = [
+                ...$form.variants[variantIndex].images,
+                url,
+            ];
         }
     };
 
@@ -55,6 +45,13 @@
         ];
     };
 
+    const deleteVariant = (variantIndex: number) => {
+        $form.variants = [
+            ...$form.variants.slice(0, variantIndex),
+            ...$form.variants.slice(variantIndex + 1),
+        ];
+    };
+
     const addVariantSize = (variantIndex: number) => {
         $form.variants[variantIndex].size = [
             ...$form.variants[variantIndex].size,
@@ -62,16 +59,15 @@
         ];
     };
 
-    const addVariantImage = (variantIndex: number) => {
-        $form.variants[variantIndex].images = [
-            ...$form.variants[variantIndex].images,
-            "",
+    const deleteVariantSize = (variantIndex: number, sizeIndex: number) => {
+        $form.variants[variantIndex].size = [
+            ...$form.variants[variantIndex].size.slice(0, sizeIndex),
+            ...$form.variants[variantIndex].size.slice(sizeIndex + 1),
         ];
     };
 </script>
 
 <svelte:head><title>Nuevo</title></svelte:head>
-
 <div
     class="h-[92vh] overflow-auto px-4 sm:px-8 py-4 bg-slate-100 flex flex-col gap-4"
 >
@@ -102,9 +98,11 @@
             >
                 Variantes
             </span>
-            <div class="border border-slate-300 rounded-lg">
+            <div class="flex flex-col gap-4">
                 {#each $form.variants as variant, variantIndex}
                     <Variants
+                        deleteVariant={() => deleteVariant(variantIndex)}
+                        addVariantSize={() => addVariantSize(variantIndex)}
                         {variantIndex}
                         bind:variantName={$form.variants[variantIndex].name}
                         variantNameErrors={$errors.variants?.[variantIndex]
@@ -113,9 +111,21 @@
                         bind:variantColor={$form.variants[variantIndex]
                             .hexColor}
                     >
+                        {#snippet imageInputChildren()}
+                            <VariantImages
+                                uploadImage={handleUploadImage}
+                                {variantIndex}
+                                variantImages={variant.images}
+                            />
+                        {/snippet}
                         {#snippet sizeInputChildren()}
                             {#each variant.size as _, sizeIndex}
                                 <VariantSize
+                                    deleteSize={() =>
+                                        deleteVariantSize(
+                                            variantIndex,
+                                            sizeIndex,
+                                        )}
                                     bind:sizeName={$form.variants[variantIndex]
                                         .size[sizeIndex].name}
                                     sizeNameErrors={$errors.variants?.[
@@ -125,73 +135,11 @@
                                 />
                             {/each}
                         {/snippet}
-                        {#snippet addSizeChildren()}
-                            <button
-                                class="bg-sky-200 hover:bg-sky-300 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg"
-                                type="button"
-                                onclick={() => addVariantSize(variantIndex)}
-                            >
-                                <span class="font-bold text-[12px]">
-                                    Agregar talle
-                                </span>
-                            </button>
-                        {/snippet}
-                        {#snippet imageInputChildren()}
-                            <div class="p-4 flex">
-                                <label
-                                    class="bg-sky-200 hover:bg-sky-300 text-sky-600 px-4 py-2 border border-sky-200 rounded-lg cursor-pointer {uploading
-                                        ? 'animate-pulse'
-                                        : ''} "
-                                >
-                                    <input
-                                        disabled={uploading ? true : false}
-                                        class="hidden"
-                                        onchange={(e) =>
-                                            handleUploadImage(e, variantIndex)}
-                                        type="file"
-                                        name=""
-                                        id=""
-                                    />
-                                    <span class="font-bold text-[12px]">
-                                        {uploading
-                                            ? "Subiendo imagen..."
-                                            : "Seleccione una imagen +"}
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="flex flex-wrap gap-2 p-4 pt-0">
-                                {#each variant.images as image, imageIndex}
-                                    <img
-                                        class="w-[20%] aspect-square object-contain rounded-lg border border-slate-300"
-                                        src={image}
-                                        alt=""
-                                    />
-                                {/each}
-                                {#if uploadingPreview}
-                                    <img
-                                        class="w-[20%] aspect-square object-contain rounded-lg border border-slate-300 animate-pulse opacity-5"
-                                        src={uploadingPreview}
-                                        alt=""
-                                    />
-                                {/if}
-                            </div>
-                        {/snippet}
-                        <!-- {#snippet addImageChildren()}
-                            <button
-                                class="bg-sky-200 hover:bg-sky-300 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg"
-                                type="button"
-                                onclick={() => addVariantImage(variantIndex)}
-                            >
-                                <span class="font-bold text-[12px]">
-                                    Agregar imagen
-                                </span>
-                            </button>
-                        {/snippet} -->
                     </Variants>
                 {/each}
             </div>
             <button
-                class="bg-sky-200 hover:bg-sky-300 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg"
+                class="bg-transparent hover:bg-sky-100 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg transition-all duration-200"
                 type="button"
                 onclick={() => addVariant()}
             >
@@ -200,7 +148,7 @@
         </div>
 
         <button
-            class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg"
+            class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg transition-all duration-200"
             type="submit"
         >
             <span class="font-bold text-[12px]">Confirmar</span>
