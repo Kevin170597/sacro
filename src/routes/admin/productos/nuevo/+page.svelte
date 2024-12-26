@@ -18,13 +18,27 @@
         dataType: "json",
     });
 
-    const handleUploadImage = async (event: Event, variantIndex: number) => {
-        const url = await fetchUploadImages(event);
-        if (url) {
-            $form.variants[variantIndex].images = [
-                ...$form.variants[variantIndex].images,
-                url,
-            ];
+    let uploadingPreview: string | null = $state(null);
+    let uploading: boolean = $state(false);
+
+    const handleUploadImage = async (
+        event: Event,
+        variantIndex: number,
+    ): Promise<void> => {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0] as File | undefined;
+        if (file) {
+            uploadingPreview = URL.createObjectURL(file);
+            uploading = true;
+            const url = await fetchUploadImages(event);
+            if (url) {
+                $form.variants[variantIndex].images = [
+                    ...$form.variants[variantIndex].images,
+                    url,
+                ];
+                uploadingPreview = null;
+                uploading = false;
+            }
         }
     };
 
@@ -123,30 +137,46 @@
                             </button>
                         {/snippet}
                         {#snippet imageInputChildren()}
-                            <label
-                                class="bg-sky-200 p-4 border border-sky-200 rounded-lg"
-                            >
-                                <input
-                                    class="hidden"
-                                    onchange={(e) =>
-                                        handleUploadImage(e, variantIndex)}
-                                    type="file"
-                                    name=""
-                                    id=""
-                                />
-                                <span>Seleccione una imagen +</span>
-                            </label>
-                            <div class="flex gap-2">
+                            <div class="p-4 flex">
+                                <label
+                                    class="bg-sky-200 hover:bg-sky-300 text-sky-600 px-4 py-2 border border-sky-200 rounded-lg cursor-pointer {uploading
+                                        ? 'animate-pulse'
+                                        : ''} "
+                                >
+                                    <input
+                                        disabled={uploading ? true : false}
+                                        class="hidden"
+                                        onchange={(e) =>
+                                            handleUploadImage(e, variantIndex)}
+                                        type="file"
+                                        name=""
+                                        id=""
+                                    />
+                                    <span class="font-bold text-[12px]">
+                                        {uploading
+                                            ? "Subiendo imagen..."
+                                            : "Seleccione una imagen +"}
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="flex flex-wrap gap-2 p-4 pt-0">
                                 {#each variant.images as image, imageIndex}
                                     <img
-                                        class="w-[30px] h-[30px]"
+                                        class="w-[20%] aspect-square object-contain rounded-lg border border-slate-300"
                                         src={image}
                                         alt=""
                                     />
                                 {/each}
+                                {#if uploadingPreview}
+                                    <img
+                                        class="w-[20%] aspect-square object-contain rounded-lg border border-slate-300 animate-pulse opacity-5"
+                                        src={uploadingPreview}
+                                        alt=""
+                                    />
+                                {/if}
                             </div>
                         {/snippet}
-                        {#snippet addImageChildren()}
+                        <!-- {#snippet addImageChildren()}
                             <button
                                 class="bg-sky-200 hover:bg-sky-300 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg"
                                 type="button"
@@ -156,7 +186,7 @@
                                     Agregar imagen
                                 </span>
                             </button>
-                        {/snippet}
+                        {/snippet} -->
                     </Variants>
                 {/each}
             </div>

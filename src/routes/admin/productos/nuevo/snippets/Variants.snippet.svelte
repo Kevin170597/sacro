@@ -11,7 +11,6 @@
         sizeInputChildren,
         addSizeChildren,
         imageInputChildren,
-        addImageChildren,
     }: {
         variantName: string;
         variantNameErrors: string[] | undefined;
@@ -21,7 +20,6 @@
         sizeInputChildren: any;
         addSizeChildren: any;
         imageInputChildren: any;
-        addImageChildren: any;
     } = $props();
 
     let variantDropped: number | null = $state(null);
@@ -69,7 +67,6 @@
         <div class="border border-slate-300 rounded-lg">
             {@render imageInputChildren()}
         </div>
-        {@render addImageChildren()}
     </div>
     <div class="px-4 pb-4">
         <div class="border border-slate-300 rounded-lg">
