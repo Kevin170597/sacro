@@ -1,6 +1,7 @@
 <script lang="ts">
-    import type { Size } from "$lib/interfaces";
     import { VariantColorInput, VariantNameInput } from ".";
+    import { DraggableIcon } from "$lib/components/icons";
+    import type { Size } from "$lib/interfaces";
 
     let {
         variantName = $bindable(),
@@ -33,6 +34,9 @@
             ? 'border-b border-slate-300 bg-slate-100'
             : ''}"
     >
+        <div class="w-[10%]">
+            <DraggableIcon color="gray" />
+        </div>
         <button
             type="button"
             onclick={() =>
@@ -58,7 +62,7 @@
                 {variantSizes.map((size) => size.name)}
             </p>
         </div>
-        <div class="w-[40%] flex items-center">
+        <div class="w-[30%] flex items-center">
             <button
                 onclick={deleteVariant}
                 type="button"
@@ -69,14 +73,15 @@
         </div>
     </div>
     {#if variantDropped === variantIndex}
-        <div class="flex px-4 pb-4">
+        <div class="flex px-4 pb-2 border-b border-slate-300">
             <VariantNameInput
                 bind:value={variantName}
                 errors={variantNameErrors}
             />
             <VariantColorInput bind:value={variantColor} />
         </div>
-        <div class="px-4 pb-4">
+        <div class="p-4 pb-4 flex flex-col gap-4">
+            <b class="text-[14px] ml-2">Fotos</b>
             <div class="border border-slate-300 rounded-lg">
                 {@render imageInputChildren()}
             </div>

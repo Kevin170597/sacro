@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { dndzone } from "svelte-dnd-action";
+    import { flip } from "svelte/animate";
     import { superForm } from "sveltekit-superforms";
     import { fetchUploadImage } from "./helpers";
     import type { PageData } from "./$types";
@@ -12,6 +14,7 @@
         VariantImages,
         Variants,
     } from "./snippets";
+    import { Button, Text } from "$lib/components";
 
     let { data }: { data: PageData } = $props();
 
@@ -19,9 +22,25 @@
         dataType: "json",
     });
 
+    const handleDndConsiderVariant = (e: CustomEvent) => {
+        $form.variants = e.detail.items;
+    };
+
+    const handleDndFinalizeVariant = (e: CustomEvent) => {
+        $form.variants = e.detail.items;
+    };
+
+    const handleDndConsiderSize = (e: CustomEvent, variantIndex: number) => {
+        $form.variants[variantIndex].size = e.detail.items;
+    };
+
+    const handleDndFinalizeSize = (e: CustomEvent, variantIndex: number) => {
+        $form.variants[variantIndex].size = e.detail.items;
+    };
+
     const handleUploadImage = async (
         event: Event,
-        variantIndex: number,
+        variantIndex: number
     ): Promise<void> => {
         const url = await fetchUploadImage(event);
         if (url) {
@@ -98,53 +117,82 @@
             >
                 Variantes
             </span>
-            <div class="flex flex-col gap-4">
-                {#each $form.variants as variant, variantIndex}
-                    <Variants
-                        deleteVariant={() => deleteVariant(variantIndex)}
-                        addVariantSize={() => addVariantSize(variantIndex)}
-                        {variantIndex}
-                        bind:variantName={$form.variants[variantIndex].name}
-                        variantNameErrors={$errors.variants?.[variantIndex]
-                            .name}
-                        bind:variantSizes={$form.variants[variantIndex].size}
-                        bind:variantColor={$form.variants[variantIndex]
-                            .hexColor}
-                    >
-                        {#snippet imageInputChildren()}
-                            <VariantImages
-                                uploadImage={handleUploadImage}
-                                {variantIndex}
-                                variantImages={variant.images}
-                            />
-                        {/snippet}
-                        {#snippet sizeInputChildren()}
-                            {#each variant.size as _, sizeIndex}
-                                <VariantSize
-                                    deleteSize={() =>
-                                        deleteVariantSize(
-                                            variantIndex,
-                                            sizeIndex,
-                                        )}
-                                    bind:sizeName={$form.variants[variantIndex]
-                                        .size[sizeIndex].name}
-                                    sizeNameErrors={$errors.variants?.[
-                                        variantIndex
-                                    ].size?.[sizeIndex].name}
-                                    {sizeIndex}
+            <div
+                class="flex flex-col gap-4"
+                use:dndzone={{
+                    items: $form.variants,
+                    flipDurationMs: 300,
+                    dropTargetStyle: { outline: "none" },
+                }}
+                onconsider={handleDndConsiderVariant}
+                onfinalize={handleDndFinalizeVariant}
+            >
+                {#each $form.variants as variant, variantIndex (variant.id)}
+                    <div animate:flip={{ duration: 300 }}>
+                        <Variants
+                            deleteVariant={() => deleteVariant(variantIndex)}
+                            addVariantSize={() => addVariantSize(variantIndex)}
+                            {variantIndex}
+                            bind:variantName={$form.variants[variantIndex].name}
+                            variantNameErrors={$errors.variants?.[variantIndex]
+                                .name}
+                            bind:variantSizes={$form.variants[variantIndex]
+                                .size}
+                            bind:variantColor={$form.variants[variantIndex]
+                                .hexColor}
+                        >
+                            {#snippet imageInputChildren()}
+                                <VariantImages
+                                    uploadImage={handleUploadImage}
+                                    {variantIndex}
+                                    variantImages={variant.images}
                                 />
-                            {/each}
-                        {/snippet}
-                    </Variants>
+                            {/snippet}
+                            {#snippet sizeInputChildren()}
+                                <div
+                                    class="flex flex-col gap-4"
+                                    use:dndzone={{
+                                        items: variant.size,
+                                        flipDurationMs: 300,
+                                        dropTargetStyle: { outline: "none" },
+                                    }}
+                                    onconsider={(e) =>
+                                        handleDndConsiderSize(e, variantIndex)}
+                                    onfinalize={(e) =>
+                                        handleDndFinalizeSize(e, variantIndex)}
+                                >
+                                    {#each variant.size as size, sizeIndex (size.id)}
+                                        <div animate:flip={{ duration: 300 }}>
+                                            <VariantSize
+                                                deleteSize={() =>
+                                                    deleteVariantSize(
+                                                        variantIndex,
+                                                        sizeIndex
+                                                    )}
+                                                bind:sizeName={$form.variants[
+                                                    variantIndex
+                                                ].size[sizeIndex].name}
+                                                sizeNameErrors={$errors
+                                                    .variants?.[variantIndex]
+                                                    .size?.[sizeIndex].name}
+                                                {sizeIndex}
+                                            />
+                                        </div>
+                                    {/each}
+                                </div>
+                            {/snippet}
+                        </Variants>
+                    </div>
                 {/each}
             </div>
-            <button
-                class="bg-transparent hover:bg-sky-100 text-sky-600 w-fit mt-4 mr-auto px-4 py-2 rounded-lg transition-all duration-200"
-                type="button"
-                onclick={() => addVariant()}
-            >
-                <span class="font-bold text-[12px]">Agregar variante</span>
-            </button>
+            <Button
+                label="Agregar variante"
+                color="sky"
+                rounded="lg"
+                size="md"
+                onclick={addVariant}
+                class="mt-4"
+            />
         </div>
 
         <button

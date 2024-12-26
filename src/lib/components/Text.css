@@ -1,0 +1,141 @@
+.textsizesm {
+    @apply text-[12px];
+}
+.textsizemd {
+    @apply text-[14px];
+}
+.textsizelg {
+    @apply text-[16px];
+}
+.textroundedsm {
+    @apply rounded-sm;
+}
+.textroundedmd {
+    @apply rounded-md;
+}
+.textroundedlg {
+    @apply rounded-lg;
+}
+.textroundedfull {
+    @apply rounded-full;
+}
+.textslate {
+    @apply text-slate-500;
+}
+.textcontained.textslate {
+    @apply text-slate-500 bg-slate-200 px-2;
+}
+.textgray {
+    @apply text-gray-500;
+}
+.textcontained.textgray {
+    @apply text-gray-500 bg-gray-200 px-2;
+}
+.textzinc {
+    @apply text-zinc-500;
+}
+.textcontained.textzinc {
+    @apply text-zinc-500 bg-zinc-200 px-2;
+}
+.textred {
+    @apply text-red-500;
+}
+.textcontained.textred {
+    @apply text-red-500 bg-red-100 px-2;
+}
+.textorange {
+    @apply text-orange-500;
+}
+.textcontained.textorange {
+    @apply text-orange-500 bg-orange-100 px-2;
+}
+.textamber {
+    @apply text-amber-500;
+}
+.textcontained.textamber {
+    @apply text-amber-500 bg-amber-100 px-2;
+}
+.textyellow {
+    @apply text-yellow-500;
+}
+.textcontained.textyellow {
+    @apply text-yellow-500 bg-yellow-100 px-2;
+}
+.textlime {
+    @apply text-lime-500;
+}
+.textcontained.textlime {
+    @apply text-lime-500 bg-lime-100 px-2;
+}
+.textgreen {
+    @apply text-green-500;
+}
+.textcontained.textgreen {
+    @apply text-green-500 bg-green-100 px-2;
+}
+.textemerald {
+    @apply text-emerald-500;
+}
+.textcontained.textemerald {
+    @apply text-emerald-500 bg-emerald-100 px-2;
+}
+.textteal {
+    @apply text-teal-500;
+}
+.textcontained.textteal {
+    @apply text-teal-500 bg-teal-100 px-2;
+}
+.textcyan {
+    @apply text-cyan-500;
+}
+.textcontained.textcyan {
+    @apply text-cyan-500 bg-cyan-100 px-2;
+}
+.textsky {
+    @apply text-sky-500;
+}
+.textcontained.textsky {
+    @apply text-sky-500 bg-sky-100 px-2;
+}
+.textblue {
+    @apply text-blue-500;
+}
+.textcontained.textblue {
+    @apply text-blue-500 bg-blue-100 px-2;
+}
+.textindigo {
+    @apply text-indigo-500;
+}
+.textcontained.textindigo {
+    @apply text-indigo-500 bg-indigo-100 px-2;
+}
+.textviolet {
+    @apply text-violet-500;
+}
+.textcontained.textviolet {
+    @apply text-violet-500 bg-violet-100 px-2;
+}
+.textpurple {
+    @apply text-purple-500;
+}
+.textcontained.textpurple {
+    @apply text-purple-500 bg-purple-100 px-2;
+}
+.textfuchsia {
+    @apply text-fuchsia-500;
+}
+.textcontained.textfuchsia {
+    @apply text-fuchsia-500 bg-fuchsia-100 px-2;
+}
+.textpink {
+    @apply text-pink-500;
+}
+.textcontained.textpink {
+    @apply text-pink-500 bg-pink-100 px-2;
+}
+.textrose {
+    @apply text-rose-500;
+}
+.textcontained.textrose {
+    @apply text-rose-500 bg-rose-100 px-2;
+}

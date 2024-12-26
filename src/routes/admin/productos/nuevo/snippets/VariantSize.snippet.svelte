@@ -1,14 +1,16 @@
 <script lang="ts">
+    import { DraggableIcon } from "$lib/components/icons";
+
     let {
         sizeName = $bindable(),
         sizeNameErrors,
         sizeIndex,
-        deleteSize
+        deleteSize,
     }: {
         sizeName: string;
         sizeNameErrors: string[] | undefined;
         sizeIndex: number;
-        deleteSize: () => void
+        deleteSize: () => void;
     } = $props();
 
     let sizeDropped: number | null = $state(null);
@@ -21,13 +23,16 @@
             ? 'border-b border-slate-300 bg-slate-100'
             : ''}"
     >
+        <div class="w-[10%]">
+            <DraggableIcon color="gray" />
+        </div>
         <button
             onclick={() =>
                 sizeDropped === sizeIndex
                     ? (sizeDropped = null)
                     : (sizeDropped = sizeIndex)}
             type="button"
-            class="w-[80%] text-left"
+            class="w-[70%] text-left"
         >
             <span class="text-[14px]">Talle</span>
             <span class="text-[14px] text-slate-400">
