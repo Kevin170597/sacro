@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { dndzone } from "svelte-dnd-action";
-    import { flip } from "svelte/animate";
     import { superForm } from "sveltekit-superforms";
     import { fetchUploadImage } from "./helpers";
+    import { dndzone } from "svelte-dnd-action";
+    import { Button } from "$lib/components";
     import type { PageData } from "./$types";
+    import { flip } from "svelte/animate";
     import { nanoid } from "nanoid";
     import {
         TitleInput,
@@ -14,7 +15,6 @@
         VariantImages,
         Variants,
     } from "./snippets";
-    import { Button, Text } from "$lib/components";
 
     let { data }: { data: PageData } = $props();
 
@@ -153,7 +153,12 @@
                                 <VariantImages
                                     uploadImage={handleUploadImage}
                                     {variantIndex}
-                                    variantImages={variant.images}
+                                    variantImages={variant.images.map(
+                                        (image) => ({
+                                            id: nanoid(5),
+                                            image: image,
+                                        })
+                                    )}
                                 />
                             {/snippet}
                             {#snippet sizeInputChildren()}

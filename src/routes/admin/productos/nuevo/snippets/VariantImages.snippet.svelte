@@ -1,4 +1,8 @@
 <script lang="ts">
+    import { CloseIcon } from "$lib/components/icons";
+    import { dndzone } from "svelte-dnd-action";
+    import { flip } from "svelte/animate";
+
     let {
         uploadImage,
         variantIndex,
@@ -6,7 +10,7 @@
     }: {
         uploadImage: (e: Event, variantIndex: number) => Promise<void>;
         variantIndex: number;
-        variantImages: string[];
+        variantImages: { id: string; image: string }[];
     } = $props();
 
     let uploadingPreview: string | null = $state(null);
@@ -22,6 +26,21 @@
             uploadingPreview = null;
             uploading = false;
         }
+    };
+
+    const deleteImage = (imageIndex: number) => {
+        variantImages = [
+            ...variantImages.slice(0, imageIndex),
+            ...variantImages.slice(imageIndex + 1),
+        ];
+    };
+
+    const handleDndConsider = (e: CustomEvent) => {
+        variantImages = e.detail.items;
+    };
+
+    const handleDndFinalize = (e: CustomEvent) => {
+        variantImages = e.detail.items;
     };
 </script>
 
@@ -45,17 +64,41 @@
     </label>
 </div>
 {#if variantImages.length > 0}
-    <div class="flex flex-wrap gap-2 p-4 pt-0">
-        {#each variantImages as image}
-            <img
-                class="w-[20%] aspect-square object-contain rounded-lg border border-slate-300"
-                src={image}
-                alt=""
-            />
+    <div
+        class="grid grid-cols-5 gap-2 p-4 pt-0"
+        use:dndzone={{
+            items: variantImages,
+            flipDurationMs: 300,
+            dropTargetStyle: { outline: "none" },
+        }}
+        onconsider={handleDndConsider}
+        onfinalize={handleDndFinalize}
+    >
+        {#each variantImages as image, imageIndex (image.id)}
+            <div
+                animate:flip={{ duration: 300 }}
+                class="flex justify-center rounded-lg border border-slate-300 relative"
+            >
+                <img
+                    class="aspect-square object-cover rounded-lg"
+                    src={image.image}
+                    alt=""
+                />
+                {#if imageIndex === 0}
+                    <span class="text-[10px] absolute top-2 left-2 bg-sky-500 font-bold text-white px-2 rounded-full">PORTADA</span>
+                {/if}
+                <button
+                    onclick={() => deleteImage(imageIndex)}
+                    type="button"
+                    class="absolute top-2 right-2 w-6 h-6 bg-slate-700 flex justify-center items-center rounded-full"
+                >
+                    <CloseIcon color="#fff" size={14} />
+                </button>
+            </div>
         {/each}
         {#if uploadingPreview}
             <img
-                class="w-[20%] aspect-square object-contain rounded-lg border border-slate-300 animate-pulse opacity-5"
+                class="aspect-square object-contain rounded-lg border border-slate-300 animate-pulse opacity-5"
                 src={uploadingPreview}
                 alt=""
             />
