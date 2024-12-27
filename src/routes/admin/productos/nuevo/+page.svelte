@@ -86,25 +86,33 @@
     };
 </script>
 
-<svelte:head><title>Nuevo</title></svelte:head>
+<svelte:head><title>Admin - Producto nuevo</title></svelte:head>
 <div
-    class="h-[92vh] overflow-auto px-4 sm:px-8 py-4 bg-slate-100 flex flex-col gap-4"
+    class="h-[92vh] overflow-auto px-4 sm:px-4 py-4 bg-slate-100 flex flex-col gap-4"
 >
     <form
-        class="px-8 py-4 w-4/5 mx-auto flex flex-col gap-4"
+        class="px-8 py-4 w-full mx-auto flex flex-col gap-4"
         method="POST"
         use:enhance
     >
-        <TitleInput bind:value={$form.title} errors={$errors.title} />
-        <UnitPriceInput
-            bind:value={$form.unit_price}
-            errors={$errors.unit_price}
-        />
-        <DiscountInput bind:value={$form.discount} errors={$errors.discount} />
-        <DescriptionInput
-            bind:value={$form.description}
-            errors={$errors.description}
-        />
+        <div class="grid grid-cols-2 gap-4">
+            <TitleInput bind:value={$form.title} errors={$errors.title} />
+            <DescriptionInput
+                bind:value={$form.description}
+                errors={$errors.description}
+            />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <UnitPriceInput
+                bind:value={$form.unit_price}
+                errors={$errors.unit_price}
+            />
+            <DiscountInput
+                bind:value={$form.discount}
+                errors={$errors.discount}
+            />
+        </div>
+
         <div
             class="bg-white flex flex-col px-8 py-4 border rounded-lg {$errors.variants
                 ? 'border-red-600'

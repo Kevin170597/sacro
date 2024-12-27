@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { LogoutIcon } from "$lib/components/icons";
     import { signOut } from "@auth/sveltekit/client";
     import { Sidebar } from "./snippets";
     import { page } from "$app/stores";
@@ -20,7 +21,9 @@
                         alt=""
                     />
                     <b class="text-[14px]">{$page.data.session.user.name}</b>
-                    <button onclick={() =>signOut()}>Salir</button>
+                    <button onclick={() =>signOut()} class="hover:bg-slate-200 p-1 rounded-lg transition-all duration-300">
+                        <LogoutIcon color="black" />
+                    </button>
                 </div>
             {/if}
         </div>

@@ -11,6 +11,7 @@
     let { data }: { data: PageData } = $props();
 </script>
 
+<svelte:head><title>Admin - {data.product?.title}</title></svelte:head>
 <div class="bg-slate-100 h-[92vh] overflow-auto px-16 p-4 flex flex-col gap-4">
     {#if data.product}
         <div class="w-4/5 mx-auto flex">
