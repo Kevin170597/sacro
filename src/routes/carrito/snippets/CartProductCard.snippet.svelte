@@ -23,7 +23,7 @@
 </script>
 
 <div class="flex gap-4 items-center py-6 border-b border-slate-300">
-    <img class="w-[8%] p-2" src={product.variants[0].images[0]} alt="" />
+    <img class="w-[8%] p-2" src={product.variants[0].images[0].url} alt="" />
     <div class="w-[50%] flex flex-col gap-2">
         <a href="/category/{product._id}" class="m-0 font-bold">
             {product.title}

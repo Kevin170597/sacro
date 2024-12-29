@@ -21,7 +21,7 @@
             </div>
             <img
                 class="w-1/6 aspect-square object-cover rounded-full"
-                src={data.product.variants[0].images[0]}
+                src={data.product.variants[0].images[0].url}
                 alt=""
             />
         </div>

@@ -8,7 +8,7 @@
 
 <div class="flex bg-white p-2 rounded-lg border border-slate-300">
     <div class="w-[6%] flex justify-center items-center">
-        <img class="p-2" src={product.variants[0].images[0]} alt="" />
+        <img class="p-2" src={product.variants[0].images[0].url} alt="" />
     </div>
     <div class="py-2 px-4 w-[44%]">
         <p class="text-[11px] text-slate-400"># {product._id}</p>

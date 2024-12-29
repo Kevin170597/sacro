@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import type { Product, Variant, Size } from "$lib/interfaces";
+import type { Product, Variant, Size, Image } from "$lib/interfaces";
 
 const Size = new Schema<Size>({
     id: {
@@ -7,6 +7,17 @@ const Size = new Schema<Size>({
         required: true
     },
     name: {
+        type: String,
+        required: true
+    }
+});
+
+const Image = new Schema<Image>({
+    id: {
+        type: String,
+        required: true
+    },
+    url: {
         type: String,
         required: true
     }
@@ -26,7 +37,7 @@ const VariantSchema = new Schema<Variant>({
         required: true
     },
     images: {
-        type: [String],
+        type: [Image],
         required: true
     },
     size: {

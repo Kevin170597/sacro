@@ -66,7 +66,7 @@
                     <div class="w-[40%] flex justify-center">
                         <img
                             class="w-[18%] h-fit aspect-square object-cover rounded-full border border-slate-300"
-                            src={variant.images[0]}
+                            src={variant.images[0].url}
                             alt=""
                         />
                     </div>

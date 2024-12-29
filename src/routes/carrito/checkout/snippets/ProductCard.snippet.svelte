@@ -10,7 +10,7 @@
 
 <div class="flex items-center border-b border-slate-300 py-1">
     <div class="w-[10%] p-4">
-        <img src={product.variants[0].images[0]} alt="" />
+        <img src={product.variants[0].images[0].url} alt="" />
     </div>
     <div class="w-[60%]">
         <h2 class="text-[14px]">{product.title}</h2>

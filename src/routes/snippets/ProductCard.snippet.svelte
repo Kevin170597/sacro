@@ -9,7 +9,7 @@
         class="bg-white flex flex-col gap-2 border border-slate-300 rounded-lg p-4"
     >
         <div class="w-full flex justify-center">
-            <img class="w-[80%]" src={product.variants[0].images[0]} alt="" />
+            <img class="w-[80%]" src={product.variants[0].images[0].url} alt="" />
         </div>
         <p
             class="text-[10px] sm:text-[12px] text-slate-500 border border-slate-300 w-fit px-2 rounded-lg"

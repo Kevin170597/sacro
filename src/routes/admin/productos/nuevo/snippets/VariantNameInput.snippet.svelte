@@ -4,7 +4,7 @@
         errors,
     }: {
         value: string;
-        errors: string[] | undefined;
+        errors: any;
     } = $props();
 </script>
 

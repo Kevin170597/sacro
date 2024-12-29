@@ -29,11 +29,20 @@ export const sizeSchema = z.object({
     name: z.string().min(1, { message: "El talle es requerido." }),
 });
 
+export type SizeSchema = typeof sizeSchema;
+
+export const imageSchema = z.object({
+    id: z.string().min(1, { message: "El id es requerido." }),
+    url: z.string().min(1, { message: "La url es requerida." }),
+});
+
+export type ImageSchema = typeof imageSchema;
+
 export const variantSchema = z.object({
     id: z.string().min(1, { message: "El id es requerido." }),
     name: z.string().min(1, { message: "El nombre es requerido." }),
     hexColor: z.string().min(1, { message: "El color es requerido." }),
-    images: z.array(z.string()).min(1, { message: "Debe haber al menos una imagen." }),
+    images: z.array(imageSchema).min(1, { message: "Debe haber al menos una imagen." }),
     size: z.array(sizeSchema).min(1, { message: "Debe haber al menos una talla." }),
 });
 

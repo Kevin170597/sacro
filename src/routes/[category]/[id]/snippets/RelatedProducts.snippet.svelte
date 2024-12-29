@@ -11,7 +11,7 @@
         >
             <img
                 class="w-[20%] h-fit"
-                src={product.variants[0].images[0]}
+                src={product.variants[0].images[0].url}
                 alt=""
             />
             <div class="w-[80%]">

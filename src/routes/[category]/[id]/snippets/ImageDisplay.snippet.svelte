@@ -26,7 +26,7 @@
                     ? 'border-2'
                     : ''}"
             >
-                <img src={img} alt="" />
+                <img src={img.url} alt="" />
             </button>
         {/each}
     </div>
@@ -38,7 +38,7 @@
             <img
                 onmousemove={(e) => (zoom = [e.offsetX, e.offsetY])}
                 onmouseleave={(e) => (zoom = null)}
-                src={variant.images[selectedImage]}
+                src={variant.images[selectedImage].url}
                 class="cursor-pointer"
                 alt=""
             />
@@ -72,7 +72,7 @@
                         {#if !inZoom}
                             <img
                                 class="w-[100%] max-h-[90vh] object-contain"
-                                src={image}
+                                src={image.url}
                                 alt=""
                             />
                         {/if}
