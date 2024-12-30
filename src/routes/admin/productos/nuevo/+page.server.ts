@@ -1,14 +1,15 @@
+import { superValidate, type Infer } from "sveltekit-superforms";
 import type { PageServerLoad, Actions } from "./$types";
-import { superValidate } from "sveltekit-superforms";
+import type { Product, Variant } from "$lib/interfaces";
 import { zod } from "sveltekit-superforms/adapters";
 import { productSchema } from "../[id]/helpers";
+import { fail, redirect } from "@sveltejs/kit";
 import { addProduct } from "$lib/services";
-import { fail } from "@sveltejs/kit";
 import { nanoid } from "nanoid";
 
 export const load: PageServerLoad = async () => {
-    const form = await superValidate(zod(productSchema));
-    let defaultVariant = {
+    const form = await superValidate<Infer<typeof productSchema>>(zod(productSchema));
+    let defaultVariant: Variant = {
         id: nanoid(5),
         hexColor: "#ffffff",
         name: "Blanco",
@@ -20,12 +21,11 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-    default: async ({ request }) => {
-        const form = await superValidate(request, zod(productSchema));
-        if (!form.valid) {
-            return fail(400, { form })
-        };
+    default: async ({ request }: { request: Request }) => {
+        const form = await superValidate<Infer<typeof productSchema>>(request, zod(productSchema));
+        if (!form.valid) return fail(400, { form });
 
-        await addProduct(form.data);
+        let product: Product | null = await addProduct(form.data);
+        if (product) return redirect(302, "/admin/productos");
     }
 };

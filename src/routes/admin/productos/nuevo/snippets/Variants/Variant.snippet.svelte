@@ -6,7 +6,7 @@
         VariantColorInput,
         VariantImages,
         VariantSize,
-    } from ".";
+    } from "./snippets";
 
     let {
         variant = $bindable(),

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { CloseIcon } from "$lib/components/icons";
-    import { fetchUploadImage } from "../helpers";
+    import { fetchUploadImage } from "../../../helpers";
     import type { Image } from "$lib/interfaces";
     import { dndzone } from "svelte-dnd-action";
     import { flip } from "svelte/animate";

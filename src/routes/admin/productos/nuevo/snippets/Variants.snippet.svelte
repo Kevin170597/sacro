@@ -3,8 +3,8 @@
     import { dndzone } from "svelte-dnd-action";
     import { Button } from "$lib/components";
     import { flip } from "svelte/animate";
+    import { Variant } from "./Variants";
     import { nanoid } from "nanoid";
-    import { Variant } from ".";
 
     let {
         variants = $bindable(),
@@ -62,7 +62,7 @@
             <div animate:flip={{ duration: 300 }}>
                 <Variant
                     {variantIndex}
-                    errors={errors && errors[variantIndex] || null}
+                    errors={(errors && errors[variantIndex]) || null}
                     bind:variant={variants[variantIndex]}
                     deleteVariant={() => deleteVariant(variantIndex)}
                 />

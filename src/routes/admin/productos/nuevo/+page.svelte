@@ -1,5 +1,6 @@
 <script lang="ts">
     import { superForm } from "sveltekit-superforms";
+    import type { Variant } from "$lib/interfaces";
     import type { PageData } from "./$types";
     import {
         TitleInput,
@@ -8,13 +9,12 @@
         DescriptionInput,
         Variants,
     } from "./snippets";
-    import type { Variant } from "$lib/interfaces";
 
     let { data }: { data: PageData } = $props();
 
     const { form, enhance, errors } = superForm(data.form, {
         dataType: "json",
-        onSubmit: () => {
+        onSubmit: (): void => {
             $form.variants = variants;
         },
     });
