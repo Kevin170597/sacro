@@ -12,7 +12,6 @@ export const uploadImage = async (image: File): Promise<string> => {
             body: formData,
         });
         const data = await response.json();
-        console.log(15, data)
         return data.data.link;
     } catch (error) {
         console.error("Error uploading image:", error);

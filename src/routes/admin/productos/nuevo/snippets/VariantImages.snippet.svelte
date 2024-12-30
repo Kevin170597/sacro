@@ -14,21 +14,53 @@
         errors: any;
     } = $props();
 
-    let uploadingPreview: string | null = $state(null);
+    let uploadingImages:
+        | { id: string; preview: string; uploading: boolean }[]
+        | [] = $state([]);
     let uploading: boolean = $state(false);
 
-    const handleUploadImage = async (event: Event) => {
+    const handleUploadImage = async (event: Event): Promise<void> => {
         const target = event.target as HTMLInputElement;
-        const file = target.files?.[0] as File | undefined;
-        if (file) {
-            uploadingPreview = URL.createObjectURL(file);
-            uploading = true;
-            const url = await fetchUploadImage(event);
-            if (url) {
-                variantImages = [...variantImages, { id: nanoid(5), url }];
-            }
-            uploadingPreview = null;
+        const files = target.files as FileList | undefined;
+        if (files) {
+            const previews = Array.from(files).map((file) => ({
+                id: nanoid(5),
+                preview: URL.createObjectURL(file),
+                uploading: true,
+            }));
+            uploadingImages = [...uploadingImages, ...previews];
+
+            /* const filePromises = Array.from(files).map(async (file, index) => {
+                uploading = true;
+                const url = await fetchUploadImage(file);
+                if (url) {
+                    variantImages = [...variantImages, { id: nanoid(5), url }];
+                    uploadingImages[index].uploading = false;
+                }
+            });
+            await Promise.all(filePromises);
             uploading = false;
+            uploadingImages = []; */
+            for (const [index, file] of Array.from(files).entries()) {
+                const currentImage = previews[index];
+                try {
+                    const url = await fetchUploadImage(file);
+                    if (url) {
+                        variantImages = [
+                            ...variantImages,
+                            { id: nanoid(5), url },
+                        ];
+                    }
+                } catch (error) {
+                    console.error("Error uploading image:", error);
+                } finally {
+                    uploadingImages = uploadingImages.map((img) =>
+                        img.id === currentImage.id
+                            ? { ...img, uploading: false }
+                            : img
+                    );
+                }
+            }
         }
     };
 
@@ -64,6 +96,8 @@
                     class="hidden"
                     onchange={(e) => handleUploadImage(e)}
                     type="file"
+                    accept="image/*"
+                    multiple
                     name=""
                     id=""
                 />
@@ -110,13 +144,23 @@
                         </button>
                     </div>
                 {/each}
-                {#if uploadingPreview}
-                    <img
-                        class="aspect-square object-contain rounded-lg border border-slate-300 animate-pulse opacity-5"
-                        src={uploadingPreview}
-                        alt=""
-                    />
-                {/if}
+            </div>
+        {/if}
+        {#if uploadingImages.length > 0}
+            <div class="grid grid-cols-5 gap-2 p-4 pt-0">
+                {#each uploadingImages as image}
+                    {#if image.uploading}
+                        <div
+                            class="flex justify-center rounded-lg border border-slate-300 relative"
+                        >
+                            <img
+                                class="aspect-square object-cover rounded-lg animate-pulse"
+                                src={image.preview}
+                                alt=""
+                            />
+                        </div>
+                    {/if}
+                {/each}
             </div>
         {/if}
     </div>
