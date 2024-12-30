@@ -5,7 +5,7 @@
 
     let { data }: { data: SuperValidated<Infer<DiscountSchema>> } = $props();
 
-    const { form, enhance, errors } = superForm(data);
+    const { form, enhance, errors, delayed } = superForm(data);
 
     let dropped: string = $state("");
 </script>
@@ -44,15 +44,24 @@
                     class="w-full border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
                     type="number"
                     placeholder="0"
-                    name="unit_price"
+                    name="discount"
                     bind:value={$form.discount}
                 />
             </div>
             <button
-                class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg"
+                class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg {$delayed
+                    ? 'animate-pulse'
+                    : ''}"
                 type="submit"
+                disabled={$delayed}
             >
-                <span class="font-bold text-[12px]">Confirmar</span>
+                <span class="font-bold text-[12px]">
+                    {#if $delayed}
+                        Guardando
+                    {:else}
+                        Confirmar
+                    {/if}
+                </span>
             </button>
         </form>
     {/if}

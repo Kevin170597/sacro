@@ -5,7 +5,7 @@
 
     let { data }: { data: SuperValidated<Infer<TitleSchema>> } = $props();
 
-    const { form, errors, enhance } = superForm(data);
+    const { form, errors, enhance, delayed } = superForm(data);
 
     let dropped: string = $state("");
 </script>
@@ -21,7 +21,13 @@
             ? 'border-b border-slate-300 bg-slate-100'
             : ''}"
     >
-        <b class="text-[14px]">Título</b>
+        <span
+            class="w-fit font-bold text-[14px] {$errors.title
+                ? 'bg-red-100  text-red-400 font-bold rounded-full px-2'
+                : ''}"
+        >
+            Título
+        </span>
         <span class="text-slate-500 text-[13px]">{$form.title}</span>
     </button>
     {#if dropped === "title"}
@@ -40,13 +46,23 @@
                 class="border border-slate-400 px-4 py-4 rounded-lg outline-none text-[12px]"
                 type="text"
                 name="title"
+                placeholder="Título..."
                 bind:value={$form.title}
             />
             <button
-                class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg"
+                class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg {$delayed
+                    ? 'animate-pulse'
+                    : ''}"
                 type="submit"
+                disabled={$delayed}
             >
-                <span class="font-bold text-[12px]">Confirmar</span>
+                <span class="font-bold text-[12px]">
+                    {#if $delayed}
+                        Guardando
+                    {:else}
+                        Confirmar
+                    {/if}
+                </span>
             </button>
         </form>
     {/if}

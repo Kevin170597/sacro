@@ -1,8 +1,8 @@
 import { titleSchema, priceSchema, discountSchema, descriptionSchema, variantsSchema } from "./helpers";
+import { getProductById, updateProduct } from "$lib/services";
 import { superValidate } from "sveltekit-superforms/server";
 import type { PageServerLoad, Actions } from "./$types";
 import { zod } from "sveltekit-superforms/adapters";
-import { getProductById } from "$lib/services";
 import { error, fail } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params }: { params: { id: string } }) => {
@@ -28,37 +28,32 @@ export const load: PageServerLoad = async ({ params }: { params: { id: string } 
 };
 
 export const actions: Actions = {
-    title: async ({ request }) => {
+    title: async ({ request, params }) => {
         const form = await superValidate(request, zod(titleSchema));
         if (!form.valid) return fail(400, { form });
-
-        console.log(59, form.data);
+        await updateProduct(params.id, { title: form.data.title });
     },
-    unit_price: async ({ request }) => {
+    unit_price: async ({ request, params }) => {
         const form = await superValidate(request, zod(priceSchema));
         if (!form.valid) return fail(400, { form });
-
-        console.log(59, form.data);
+        await updateProduct(params.id, { unit_price: form.data.unit_price });
     },
-    discount: async ({ request }) => {
+    discount: async ({ request, params }) => {
         const form = await superValidate(request, zod(discountSchema));
+        console.log(form.data);
         if (!form.valid) return fail(400, { form });
-
-        console.log(59, form.data);
+        await updateProduct(params.id, { discount: form.data.discount });
     },
-    description: async ({ request }) => {
+    description: async ({ request, params }) => {
         const form = await superValidate(request, zod(descriptionSchema));
         if (!form.valid) return fail(400, { form });
-
-        console.log(59, form.data);
+        await updateProduct(params.id, { description: form.data.description });
     },
-    variants: async ({ request }) => {
+    variants: async ({ request, params }) => {
         const form = await superValidate(request, zod(variantsSchema));
         if (!form.valid) {
-            console.log(108, form)
             return fail(400, { form })
         };
-
-        console.log(59, form.data);
+        await updateProduct(params.id, { variants: form.data.variants });
     },
 }

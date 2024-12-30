@@ -5,7 +5,7 @@
 
     let { data }: { data: SuperValidated<Infer<PriceSchema>> } = $props();
 
-    const { form, enhance, errors } = superForm(data);
+    const { form, enhance, errors, delayed } = superForm(data);
 
     let dropped: string = $state("");
 </script>
@@ -23,7 +23,13 @@
             ? 'border-b border-slate-300 bg-slate-100'
             : ''}"
     >
-        <b class="text-[14px]">Precio</b>
+        <span
+            class="w-fit font-bold text-[14px] {$errors.unit_price
+                ? 'bg-red-100  text-red-400 font-bold rounded-full px-2'
+                : ''}"
+        >
+            Precio
+        </span>
         <span class="text-slate-500 text-[13px]">
             ${$form.unit_price.toLocaleString("es-AR")}
         </span>
@@ -51,10 +57,19 @@
                 />
             </div>
             <button
-                class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg"
+                class="bg-sky-500 hover:bg-sky-600 text-white w-fit ml-auto px-4 py-2 rounded-lg {$delayed
+                    ? 'animate-pulse'
+                    : ''}"
                 type="submit"
+                disabled={$delayed}
             >
-                <span class="font-bold text-[12px]">Confirmar</span>
+                <span class="font-bold text-[12px]">
+                    {#if $delayed}
+                        Guardando
+                    {:else}
+                        Confirmar
+                    {/if}
+                </span>
             </button>
         </form>
     {/if}

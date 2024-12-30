@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { CloseIcon } from "$lib/components/icons";
-    import { fetchUploadImage } from "../../../helpers";
     import type { Image } from "$lib/interfaces";
+    import { nanoid } from "nanoid";
+    import { fetchUploadImage } from "../../../../nuevo/helpers";
+    import { CloseIcon } from "$lib/components/icons";
     import { dndzone } from "svelte-dnd-action";
     import { flip } from "svelte/animate";
-    import { nanoid } from "nanoid";
 
     let {
         variantImages = $bindable(),
@@ -65,7 +65,7 @@
         (variantImages = e.detail.items);
 </script>
 
-<div class="p-4 pb-4 flex flex-col gap-4">
+<div class="px-4 py-4 border-t border-b border-slate-300 flex flex-col gap-4">
     <b class="text-[14px] ml-2">Fotos</b>
     {#if errors}
         <span class="text-red-600 text-[12px]">
@@ -82,7 +82,7 @@
                 <input
                     disabled={uploading ? true : false}
                     class="hidden"
-                    onchange={(e) => handleUploadImage(e)}
+                    onchange={handleUploadImage}
                     type="file"
                     accept="image/*"
                     multiple
@@ -98,7 +98,7 @@
         </div>
         {#if variantImages.length > 0}
             <div
-                class="grid grid-cols-5 gap-2 p-4 pt-0"
+                class="grid grid-cols-4 gap-2 p-4 pt-0"
                 use:dndzone={{
                     items: variantImages,
                     flipDurationMs: 300,
@@ -135,7 +135,7 @@
             </div>
         {/if}
         {#if uploadingImages.length > 0}
-            <div class="grid grid-cols-5 gap-2 p-4 pt-0">
+            <div class="grid grid-cols-4 gap-2 p-4 pt-0">
                 {#each uploadingImages as image}
                     {#if image.uploading}
                         <div
