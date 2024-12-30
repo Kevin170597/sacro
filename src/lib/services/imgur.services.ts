@@ -1,6 +1,6 @@
 import { IMGUR_TOKEN } from "$env/static/private";
 
-export const uploadImage = async (image: File): Promise<string> => {
+export const uploadImage = async (image: File): Promise<string | undefined> => {
     try {
         const formData = new FormData();
         formData.append("image", image, image.name);
@@ -15,6 +15,5 @@ export const uploadImage = async (image: File): Promise<string> => {
         return data.data.link;
     } catch (error) {
         console.error("Error uploading image:", error);
-        return "";
     }
 };

@@ -26,7 +26,7 @@
                 class="w-full sm:w-[65%] bg-white p-3 border border-slate-300 rounded-lg"
             >
                 <ImageDisplay
-                    variant={data.product.variants[selectedColor]}
+                    images={data.product.variants[selectedColor].images}
                     bind:selectedImage
                 />
                 <RelatedProducts relatedProducts={data.relatedProducts} />

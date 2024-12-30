@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { ImageViewer } from "$lib/components";
-    import type { Variant } from "$lib/interfaces";
     import emblaCarouselSvelte from "embla-carousel-svelte";
     import { CloseIcon } from "$lib/components/icons";
+    import { ImageViewer } from "$lib/components";
+    import type { Image } from "$lib/interfaces";
 
     let {
-        variant,
+        images,
         selectedImage = $bindable(),
-    }: { variant: Variant; selectedImage: number } = $props();
+    }: { images: Image[]; selectedImage: number } = $props();
 
     let zoom: null | any = $state(null);
     let multiplier: number = $state(3);
@@ -18,15 +18,22 @@
 
 <div class="flex border-b border-slate-300 pb-8">
     <div class="w-[8%] flex flex-col gap-2 p-2">
-        {#each variant.images as img, i}
+        {#each { length: 7 } as _, i}
             <button
-                onclick={() => (selectedImage = i)}
-                class="border border-slate-400 p-1 rounded-lg {selectedImage ===
-                i
-                    ? 'border-2'
-                    : ''}"
+                onclick={i === 6
+                    ? () => (fullscreenImage = i)
+                    : () => (selectedImage = i)}
+                class="border border-slate-400 p-1 rounded-lg relative
+                {selectedImage === i ? 'border-2' : ''}"
             >
-                <img src={img.url} alt="" />
+                <img src={images[i].url} alt="" />
+                {#if i === 6}
+                    <p
+                        class="flex w-full h-full text-[32px] backdrop-contrast-[0.6] justify-center items-center rounded-lg text-slate-100 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    >
+                        +
+                    </p>
+                {/if}
             </button>
         {/each}
     </div>
@@ -38,7 +45,7 @@
             <img
                 onmousemove={(e) => (zoom = [e.offsetX, e.offsetY])}
                 onmouseleave={(e) => (zoom = null)}
-                src={variant.images[selectedImage].url}
+                src={images[selectedImage].url}
                 class="cursor-pointer"
                 alt=""
             />
@@ -48,7 +55,7 @@
                 class="w-[32%] h-[90vh] fixed top-[10vh] right-8"
                 style:background-repeat="no-repeat"
                 style:background-size="300%"
-                style:background-image="url({variant.images[selectedImage]})"
+                style:background-image="url({images[selectedImage].url})"
                 style:background-position-x="{150 - zoom[0] * multiplier}px"
                 style:background-position-y="{150 - zoom[1] * multiplier}px"
             ></div>
@@ -63,11 +70,10 @@
             }}
         >
             <div class="flex h-full w-full">
-                {#each variant.images as image}
+                {#each images as image}
                     <div
                         class="flex justify-center items-center"
                         style:flex="0 0 100%"
-                        
                     >
                         {#if !inZoom}
                             <img
