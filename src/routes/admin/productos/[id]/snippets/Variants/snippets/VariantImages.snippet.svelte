@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type { Image } from "$lib/interfaces";
-    import { nanoid } from "nanoid";
-    import { fetchUploadImage } from "../../../../nuevo/helpers";
+    import { fetchUploadImage } from "../../../../nuevo/snippets/Variants/snippets/VariantImages.snippet";
     import { CloseIcon } from "$lib/components/icons";
+    import type { Image } from "$lib/interfaces";
     import { dndzone } from "svelte-dnd-action";
     import { flip } from "svelte/animate";
+    import { nanoid } from "nanoid";
 
     let {
         variantImages = $bindable(),

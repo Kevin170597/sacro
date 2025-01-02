@@ -1,6 +1,7 @@
 <script lang="ts">
     import { DraggableIcon } from "$lib/components/icons";
-    import type { Variant } from "$lib/interfaces";
+    import { deleteVariant } from "./Variant.snippet";
+    import { variants } from "../../page.svelte";
     import {
         VariantNameInput,
         VariantColorInput,
@@ -9,13 +10,9 @@
     } from "./snippets";
 
     let {
-        variant = $bindable(),
-        deleteVariant,
         variantIndex,
         errors,
     }: {
-        variant: Variant;
-        deleteVariant: () => void;
         variantIndex: number;
         errors: any;
     } = $props();
@@ -42,7 +39,7 @@
             class="w-[40%] text-left flex flex-col justify-center gap-1"
         >
             <span class="text-[14px] px-2">
-                {variant.name || "Sin nombre"}
+                {variants.variants[variantIndex].name || "Sin nombre"}
             </span>
             {#if variantIndex === 0}
                 <span
@@ -54,7 +51,7 @@
         </button>
         <div class="w-[60%] flex items-center">
             <button
-                onclick={deleteVariant}
+                onclick={() => deleteVariant(variantIndex)}
                 type="button"
                 class="w-fit ml-auto bg-transparent hover:bg-red-100 transition-all duration-200 px-2 rounded-lg"
             >
@@ -65,17 +62,19 @@
     {#if variantDropped === variantIndex}
         <div class="flex px-4 pb-2 border-b border-slate-300">
             <VariantNameInput
-                bind:value={variant.name}
+                bind:value={variants.variants[variantIndex].name}
                 errors={(errors && errors.name) || null}
             />
-            <VariantColorInput bind:value={variant.hexColor} />
+            <VariantColorInput
+                bind:value={variants.variants[variantIndex].hexColor}
+            />
         </div>
         <VariantImages
-            bind:variantImages={variant.images}
+            bind:variantImages={variants.variants[variantIndex].images}
             errors={(errors && errors.images) || null}
         />
         <VariantSize
-            bind:sizes={variant.size}
+            bind:sizes={variants.variants[variantIndex].size}
             errors={(errors && errors.size) || null}
         />
     {/if}
